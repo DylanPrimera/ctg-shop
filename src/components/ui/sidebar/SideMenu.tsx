@@ -10,6 +10,8 @@ import {
   IoTicketOutline,
 } from "react-icons/io5";
 import { SidebarMenuItem } from "./SidebarMenuItem";
+import { useUIStore } from "@/store";
+import clsx from "clsx";
 
 const menuOptions = [
   {
@@ -50,20 +52,34 @@ const administrationOptions = [
     icon: <IoPeopleOutline size={20} />,
     href: "/profile",
   },
-]
+];
 
 export const SideMenu = () => {
+  const isMenuOpen = useUIStore((state) => state.isMenuOpen);
+  const closeMenu = useUIStore((state) => state.closeSideMenu);
+
   return (
     <div>
-      <div className="fixed top-0 left-0 w-screen h-screen z-10 bg-black opacity-30" />
+      {isMenuOpen && (
+        <div className="fixed top-0 left-0 w-screen h-screen z-10 bg-black opacity-30" />
+      )}
+      {isMenuOpen && (
+        <div className="fade-in fixed top-0 left-0 w-screen h-screen z-10 backdrop-filter backdrop-blur-sm" />
+      )}
 
-      <div className="fade-in fixed top-0 left-0 w-screen h-screen z-10 backdrop-filter backdrop-blur-sm" />
       <aside>
-        <nav className="fixed p-5 right-0 top-0 w-[21rem] h-screen bg-white z-20 shadow-2xl transform transition-all duration-300">
+        <nav
+          className={clsx(
+            "fixed p-5 right-0 top-0 w-[21rem] h-screen bg-white z-20 shadow-2xl transform transition-all duration-300",
+            {
+              "translate-x-full": !isMenuOpen,
+            }
+          )}
+        >
           <IoCloseOutline
             size={45}
             className="absolute top-5 right-5 cursor-pointer"
-            onClick={() => console.log("clicked")}
+            onClick={closeMenu}
           />
 
           <div className="relative mt-14">
@@ -77,7 +93,7 @@ export const SideMenu = () => {
           {menuOptions.map((option) => (
             <SidebarMenuItem key={option.title} {...option} />
           ))}
-          <hr className="w-full h-px bg-gray-200 my-10"/>
+          <hr className="w-full h-px bg-gray-200 my-10" />
           {administrationOptions.map((option) => (
             <SidebarMenuItem key={option.title} {...option} />
           ))}
