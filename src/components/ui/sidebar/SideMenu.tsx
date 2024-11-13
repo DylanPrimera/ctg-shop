@@ -56,21 +56,24 @@ const administrationOptions = [
 
 export const SideMenu = () => {
   const isMenuOpen = useUIStore((state) => state.isMenuOpen);
-  const closeMenu = useUIStore((state) => state.closeSideMenu);
+  const closeSideMenu = useUIStore((state) => state.closeSideMenu);
 
   return (
     <div>
       {isMenuOpen && (
-        <div className="fixed top-0 left-0 w-screen h-screen z-10 bg-black opacity-30" />
+        <div className="fixed top-0 left-0 w-screen h-screen z-10 bg-black opacity-30 transition-all" />
       )}
       {isMenuOpen && (
-        <div className="fade-in fixed top-0 left-0 w-screen h-screen z-10 backdrop-filter backdrop-blur-sm" />
+        <div
+          className="fade-in fixed top-0 left-0 w-screen h-screen z-10 backdrop-filter backdrop-blur-sm transition-all"
+          onClick={closeSideMenu}
+        />
       )}
 
       <aside>
         <nav
           className={clsx(
-            "fixed p-5 right-0 top-0 w-[21rem] h-screen bg-white z-20 shadow-2xl transform transition-all duration-300",
+            "fixed p-5 right-0 top-0 w-[21rem] h-screen bg-white z-20 shadow-2xl transform transition-all duration-200",
             {
               "translate-x-full": !isMenuOpen,
             }
@@ -79,7 +82,7 @@ export const SideMenu = () => {
           <IoCloseOutline
             size={45}
             className="absolute top-5 right-5 cursor-pointer"
-            onClick={closeMenu}
+            onClick={closeSideMenu}
           />
 
           <div className="relative mt-14">

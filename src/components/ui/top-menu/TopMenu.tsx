@@ -16,8 +16,8 @@ const navItems = [
     href: "/category/women",
   },
   {
-    label: "Kids",
-    href: "/category/kids",
+    label: "Kid",
+    href: "/category/kid",
   },
 ];
 
@@ -32,7 +32,7 @@ export const TopMenu = () => {
           >
             CTG
           </span>
-          <span>| Shop</span>
+          <span className="antialiased">| Shop</span>
         </Link>
       </div>
       <div className="hidden sm:block">
