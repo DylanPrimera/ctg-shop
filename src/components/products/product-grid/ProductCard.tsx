@@ -25,12 +25,13 @@ export const ProductCard = ({ product }: Props) => {
         <Image
           src={`/products/${displayImage}`}
           alt={product.title}
-          className="w-full object-cover transition-all rounded"
+          className="w-full object-cover rounded transform transition-all duration-300 ease-in-out hover:scale-105"
           width={500}
           height={500}
           onMouseEnter={() => handleMouseEvent(true)}
           onMouseLeave={() => handleMouseEvent(false)}
         />
+
       </Link>
 
       <div className="p-4 flex flex-col">
