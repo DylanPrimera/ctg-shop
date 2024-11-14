@@ -61,11 +61,11 @@ export const SideMenu = () => {
   return (
     <div>
       {isMenuOpen && (
-        <div className="fixed top-0 left-0 w-screen h-screen z-10 bg-black opacity-30 transition-all" />
+        <div className="fixed top-0 left-0 w-screen h-screen z-20 bg-black opacity-30 transition-all" />
       )}
       {isMenuOpen && (
         <div
-          className="fade-in fixed top-0 left-0 w-screen h-screen z-10 backdrop-filter backdrop-blur-sm transition-all"
+          className="fade-in fixed top-0 left-0 w-screen h-screen z-20 backdrop-filter backdrop-blur-sm transition-all"
           onClick={closeSideMenu}
         />
       )}
@@ -73,7 +73,7 @@ export const SideMenu = () => {
       <aside>
         <nav
           className={clsx(
-            "fixed p-5 right-0 top-0 w-[21rem] h-screen bg-white z-20 shadow-2xl transform transition-all duration-200",
+            "fixed p-5 right-0 top-0 w-[21rem] h-screen bg-white z-50 shadow-2xl transform transition-all duration-200",
             {
               "translate-x-full": !isMenuOpen,
             }
