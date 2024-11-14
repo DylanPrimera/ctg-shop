@@ -18,8 +18,8 @@ export const ProductMobileSlideShow = ({ images, title, customClass }: Props) =>
     <div className={customClass}>
       <Swiper
         style={{
-          width: "100vw",
-          height: "500px",
+          width: "100%",
+          height: "100%",
         }}
         pagination
         modules={[FreeMode,Autoplay, Pagination]}

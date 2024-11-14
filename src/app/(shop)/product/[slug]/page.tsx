@@ -19,9 +19,9 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="mt-5 mb-20 grid grid-cols-1 md:grid-cols-3 gap-3">
-      <div className="col-span-1 md:col-span-2 place-items-center">
-        <ProductMobileSlideShow images={product.images} title={product.title} customClass="block md:hidden"/>
-        <ProductSlideShow images={product.images} title={product.title} customClass="w-[50vw] h-[38rem] hidden md:block"/>
+      <div className="col-span-1 md:col-span-2">
+        <ProductMobileSlideShow images={product.images} title={product.title} customClass="block md:hidden w-full"/>
+        <ProductSlideShow images={product.images} title={product.title} customClass="hidden md:block md:w-full m-auto lg:w-[80%] 2xl:w-[60%]"/>
       </div>
       <div className="col-span-1 px-5 ">
         <h1 className={`${titleFont.className} antialiased font-bold text-xl`}>

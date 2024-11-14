@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import { Swiper as SwiperObject } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs, Autoplay } from "swiper/modules";
-import "swiper/css";
 import Image from "next/image";
+
+
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
@@ -30,13 +31,11 @@ export const ProductSlideShow = ({ images, title, customClass }: Props) => {
         className="mySwiper2"
         slidesPerView={1}
         autoplay={{ delay: 3000 }}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
       >
         {images.map((image) => (
           <SwiperSlide key={image}>
             <Image
-              className="w-full h-full object-cover rounded-lg"
+              className="object-fill rounded-lg"
               src={`/products/${image}`}
               alt={title}
               width={1024}
@@ -57,7 +56,7 @@ export const ProductSlideShow = ({ images, title, customClass }: Props) => {
         {images.map((image) => (
           <SwiperSlide key={image}>
             <Image
-              className="w-full h-full object-fill rounded-lg"
+              className="w-full h-full object-fill rounded-lg cursor-pointer"
               src={`/products/${image}`}
               alt={title}
               width={300}
