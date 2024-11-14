@@ -11,18 +11,18 @@ interface Props {
 
 const burnedProducts = initialData.products;
 
-export default function CategoryPage({ params }: Props) {
-  const { id } = params;
+export default async function CategoryPage({ params }: Props) {
+  const { id } = await params;
   const categoryProducts = burnedProducts.filter(
     (product) => product.gender === id
   );
   const validCategories: Record<ValidCategory, string> = {
-    'men': "for men",
-    'women': "for women",
-    'kid': "for kid",
-    'unisex': "for everybody"
-  }
- 
+    men: "for men",
+    women: "for women",
+    kid: "for kid",
+    unisex: "for everybody",
+  };
+
   if (!(id in validCategories)) {
     notFound();
   }
