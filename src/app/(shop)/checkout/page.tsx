@@ -42,7 +42,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Checkout*/}
-          <div className="bg-white rounded-xl shadow-xl p-4 order-first md:order-last">
+          <div className="bg-white rounded-xl shadow-xl p-4 order-first md:order-last h-fit">
             <h2 className="text-2xl mb-2 font-bold">Delivery address</h2>
             <div className="mb-10">
               <p className="text-xl">John Doe</p>

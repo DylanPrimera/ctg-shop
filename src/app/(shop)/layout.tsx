@@ -9,7 +9,7 @@ export default function ShopLayout({
     <main className="flex-1">
       <TopMenu />
       <SideMenu />
-      <div className="px-0 sm:px-10">{children}</div>
+      <div className="px-3 sm:px-10">{children}</div>
       <Footer/>
     </main>
   );

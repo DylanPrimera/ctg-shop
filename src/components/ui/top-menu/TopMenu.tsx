@@ -1,7 +1,6 @@
 'use client'
 import { titleFont } from "@/config/fonts";
 import Link from "next/link";
-import React, { useEffect } from "react";
 import { NavItem } from "./NavItem";
 import { IoSearchOutline, IoCartOutline, IoMenuOutline } from "react-icons/io5";
 import { useUIStore } from "@/store";
@@ -23,34 +22,8 @@ const navItems = [
 
 export const TopMenu = () => {
   const openMenu = useUIStore((state) => state.openSideMenu);
-  const navBar = React.useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const handleScroll = () => {
-      if (navBar.current) {
-        if (window.scrollY > 0) {
-          navBar.current.classList.add("fixed");
-          navBar.current.classList.add("top-0");
-          navBar.current.classList.add("bg-white");
-          navBar.current.classList.add("z-10");
-          navBar.current.classList.add("shadow-md");
-          navBar.current.classList.add("transition-all");
-        } else {
-          navBar.current.classList.remove("fixed");
-          navBar.current.classList.remove("top-0");
-          navBar.current.classList.remove("bg-white");
-          navBar.current.classList.remove("z-5");
-          navBar.current.classList.remove("shadow-md");
-          navBar.current.classList.remove("transition-all");
-        }
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
   return (
-    <nav id="NavBar" ref={navBar} className="flex px-5 justify-between items-center w-full">
+    <nav className="flex px-5 justify-between items-center w-full">
       <div>
         <Link href={"/"}>
           <span
