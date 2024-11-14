@@ -6,3 +6,4 @@ export * from "./ui/not-found/NotFound";
 export * from "./ui/sidebar/SideMenu";
 export * from "./ui/title/Title";
 export * from "./ui/top-menu/TopMenu";
+export * from './product/slideshow/ProductSlideShow'
