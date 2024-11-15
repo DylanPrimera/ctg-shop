@@ -1,6 +1,7 @@
 "use client";
 
 import { getStockBySlug } from "@/actions";
+import { Skeleton } from "@/components";
 import { titleFont } from "@/config/fonts";
 import { useEffect, useState } from "react";
 
@@ -25,7 +26,7 @@ export const StockLabel = ({ slug }: Props) => {
   return (
     <>
       {loading ? (
-        <div className="rounded animate-pulse bg-gray-200">&nbsp;</div>
+        <Skeleton/>
       ) : (
         <h1
           className={`${titleFont.className} antialiased font-semibold text-lg my-2`}
