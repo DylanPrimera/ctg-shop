@@ -1,5 +1,6 @@
 export interface Product {
-    description: string;
+    id?: string;
+    description: string | null;
     images: string[];
     inStock: number;
     price: number;
@@ -7,7 +8,7 @@ export interface Product {
     slug: string;
     tags: string[];
     title: string;
-    type: ValidType;
+    type?: ValidType;
     gender: ValidCategory
 }
 

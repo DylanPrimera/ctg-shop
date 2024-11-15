@@ -25,7 +25,7 @@ async function main() {
   // Products
   products.forEach(async (product) => {
     const { type, images, ...rest } = product;
-    const categoryId = categoriesMap[type];
+    const categoryId = categoriesMap[type as string];
     const productDB = await prisma.product.create({
       data: {
         ...rest,
