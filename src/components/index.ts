@@ -1,3 +1,6 @@
+export * from './product/slideshow/ProductMobileSlideShow'
+export * from './product/slideshow/ProductSlideShow'
+export * from './ui/footer/Footer'
 export * from "./product/quantity-selector/QuantitySelector";
 export * from "./product/size-selector/SizeSelector";
 export * from "./products/product-grid/ProductCard";
@@ -6,5 +9,3 @@ export * from "./ui/not-found/NotFound";
 export * from "./ui/sidebar/SideMenu";
 export * from "./ui/title/Title";
 export * from "./ui/top-menu/TopMenu";
-export * from './product/slideshow/ProductSlideShow'
-export * from './product/slideshow/ProductMobileSlideShow'

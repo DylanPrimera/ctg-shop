@@ -10,6 +10,11 @@
 !.yarn/releases
 !.yarn/versions
 
+/postgres
+.env
+
+/prisma/migrations
+
 # testing
 /coverage
 
@@ -38,3 +43,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+

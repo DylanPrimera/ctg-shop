@@ -49,7 +49,7 @@ export default function CartPage() {
           </div>
 
           {/* Checkout*/}
-          <div className="bg-white rounded-xl shadow-xl p-4 md:h-1/2 order-first md:order-last">
+          <div className="bg-white rounded-xl shadow-xl p-4 h-fit order-first md:order-last">
             <h2 className="text-2xl mb-2">Order summary</h2>
             <div className="grid grid-cols-2">
               <span>N°. products</span>

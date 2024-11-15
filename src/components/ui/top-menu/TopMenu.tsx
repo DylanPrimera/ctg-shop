@@ -1,7 +1,6 @@
 'use client'
 import { titleFont } from "@/config/fonts";
 import Link from "next/link";
-import React from "react";
 import { NavItem } from "./NavItem";
 import { IoSearchOutline, IoCartOutline, IoMenuOutline } from "react-icons/io5";
 import { useUIStore } from "@/store";
