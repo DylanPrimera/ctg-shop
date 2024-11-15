@@ -1,1 +1,1 @@
-export { getProducts, getProductBySlug } from './products/products-actions';
+export { getProducts, getProductBySlug, getStockBySlug } from "./products/products-actions";

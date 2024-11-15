@@ -1,9 +1,12 @@
+export const revalidate = 604800; // 7 days
+
 import { getProductBySlug } from "@/actions";
 import {
   ProductMobileSlideShow,
   ProductSlideShow,
   QuantitySelector,
   SizeSelector,
+  StockLabel,
 } from "@/components";
 import { titleFont } from "@/config/fonts";
 import { notFound } from "next/navigation";
@@ -12,10 +15,23 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export default async function ProductPage({ params }: Props) {
+export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 
+  return {
+    title: `${product?.title} | CTG Shop`,
+    description: `${product?.description}`,
+    openGraph: {
+      images: product?.images,
+    },
+  };
+}
+
+export default async function ProductPage({ params }: Props) {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+  
   if (!product) {
     notFound();
   }
@@ -42,6 +58,7 @@ export default async function ProductPage({ params }: Props) {
           >
             {product.title}
           </h1>
+          <StockLabel slug={slug} />
           <p className="text-lg mb-5">$ {product.price.toFixed(2)}</p>
 
           <SizeSelector

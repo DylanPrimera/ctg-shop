@@ -1,17 +1,16 @@
+'use server'
+
+
 import prisma from "@/lib/prisma";
 import { Gender } from "@prisma/client";
 
-interface PaginationOptions {
+interface Filters {
   page?: number;
   take?: number;
   gender?: Gender;
 }
 
-export const getProducts = async ({
-  page = 1,
-  take = 12,
-  gender
-}: PaginationOptions) => {
+export const getProducts = async ({ page = 1, take = 12, gender }: Filters) => {
   if (isNaN(Number(page)) || page < 1) page = 1;
   try {
     //Get all products
@@ -32,11 +31,13 @@ export const getProducts = async ({
     });
 
     //Pagination
-    const totalPages = Math.ceil((await prisma.product.count({
-      where: {
-        gender,
-      },
-    })) / take);
+    const totalPages = Math.ceil(
+      (await prisma.product.count({
+        where: {
+          gender,
+        },
+      })) / take
+    );
 
     await Promise.all([productsDB, totalPages]);
     return {
@@ -77,5 +78,23 @@ export const getProductBySlug = async (slug: string) => {
   } catch (error) {
     console.error(error);
     throw new Error("Error fetching product");
+  }
+};
+
+export const getStockBySlug = async (slug: string) => {
+  try {
+    const product = await prisma.product.findFirst({
+      where: {
+        slug,
+      },
+      select: {
+        inStock: true,
+      },
+    });
+    
+    return product?.inStock ?? 0;
+  } catch (error) {
+    console.error(error);
+    return 0;
   }
 };
