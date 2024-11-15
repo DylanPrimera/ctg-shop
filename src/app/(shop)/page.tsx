@@ -1,5 +1,5 @@
 import { getProducts } from "@/actions/products/products-actions";
-import { ProductsGrid, Title } from "@/components";
+import { Pagination, ProductsGrid, Title } from "@/components";
 import { redirect } from "next/navigation";
 
 interface Props {
@@ -22,6 +22,7 @@ export default async function Home({ searchParams }: Props) {
     <>
       <Title title="Store" subtitle="All products" />
       <ProductsGrid products={products} />
+      <Pagination totalPages={totalPages}/>
     </>
   );
 }
