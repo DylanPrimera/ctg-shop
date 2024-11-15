@@ -11,6 +11,7 @@ export const getProducts = async ({
 }: PaginationOptions) => {
   if (isNaN(Number(page)) || page < 1) page = 1;
   try {
+    //Get all products
     const productsDB = await prisma.product.findMany({
       take,
       skip: (page - 1) * take,
@@ -23,9 +24,14 @@ export const getProducts = async ({
         },
       },
     });
+
+    //Pagination
+    const totalPages = Math.ceil((await prisma.product.count()) / take);
+
+    await Promise.all([productsDB, totalPages]);
     return {
-      currentPage: 1,
-      totalPages: 10,
+      currentPage: page,
+      totalPages,
       products: productsDB.map((product) => ({
         ...product,
         images: product.images.map((image) => image.url),
