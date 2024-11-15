@@ -2,7 +2,7 @@
 import { generatePaginationNumbers } from "@/utils";
 import clsx from "clsx";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 
 interface Props {
@@ -12,8 +12,15 @@ interface Props {
 export const Pagination = ({ totalPages }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get("page")) || 1;
+
+  const currentPage =
+    Number(searchParams.get("page") ? searchParams.get("page") : 1) ?? 1;
+
   const numberOfPages = generatePaginationNumbers(currentPage, totalPages);
+
+  if (currentPage < 1 || isNaN(currentPage)) {
+    redirect(pathname);
+  }
 
   const createPageUrl = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
@@ -60,7 +67,7 @@ export const Pagination = ({ totalPages }: Props) => {
                 className={clsx(
                   "page-link relative block py-1.5 px-3 rounded border-0  outline-none transition-all duration-300 text-gray-800 hover:text-gray-800  focus:shadow-none",
                   {
-                    "bg-blue-600 hover:bg-blue-600 text-white":
+                    "bg-blue-600 hover:bg-blue-600 text-white hover:text-white":
                       currentPage === page,
                     "bg-transparent hover:bg-gray-200": currentPage !== page,
                   }

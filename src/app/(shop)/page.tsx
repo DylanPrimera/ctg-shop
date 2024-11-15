@@ -11,11 +11,11 @@ interface Props {
 export default async function Home({ searchParams }: Props) {
   const { page } = await searchParams;
   const pageParam = page ? parseInt(page) : 1;
-  const { products, currentPage, totalPages } = await getProducts({
+  const { products, totalPages } = await getProducts({
     page: pageParam,
   });
 
-  console.log({ currentPage, totalPages });
+
   if (products.length === 0) redirect("/");
 
   return (
