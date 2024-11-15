@@ -20,10 +20,12 @@ export async function generateMetadata({ params }: Props) {
   const product = await getProductBySlug(slug);
 
   return {
-    title: `${product?.title} | CTG Shop`,
+    title: `${product?.title}`,
     description: `${product?.description}`,
     openGraph: {
-      images: product?.images,
+      title: product?.title,
+      description: product?.description,
+      images: [`/products/${product?.images[1]}`],
     },
   };
 }
