@@ -9,9 +9,9 @@ export interface Product {
     tags: string[];
     title: string;
     type?: ValidType;
-    gender: ValidCategory
+    gender: ValidGender
 }
 
-export type ValidCategory = 'men'|'women'|'kid'|'unisex';
+export type ValidGender = 'men'|'women'|'kid'|'unisex';
 export type ValidSize = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL';
 export type ValidType = 'shirts'|'pants'|'hoodies'|'hats';
