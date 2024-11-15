@@ -1,11 +1,11 @@
+export const revalidate = 60;
+
 import { getProducts } from "@/actions/products/products-actions";
 import { Pagination, ProductsGrid, Title } from "@/components";
 import { redirect } from "next/navigation";
 
 interface Props {
-  searchParams: {
-    page?: string;
-  };
+  searchParams: Promise<{ page?: string }>
 }
 
 export default async function Home({ searchParams }: Props) {

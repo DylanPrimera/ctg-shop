@@ -52,3 +52,30 @@ export const getProducts = async ({
     throw new Error("Error fetching products");
   }
 };
+
+export const getProductBySlug = async (slug: string) => {
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        slug,
+      },
+      include: {
+        images: {
+          select: {
+            url: true,
+          },
+        },
+      },
+    });
+
+    if (!product) return null;
+
+    return {
+      ...product,
+      images: product.images.map((image) => image.url),
+    };
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error fetching product");
+  }
+};
