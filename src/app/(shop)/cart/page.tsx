@@ -1,6 +1,7 @@
 import { Title } from "@/components";
 import Link from "next/link";
 import { CartProducts } from "./ui/CartProducts";
+import { CartSummary } from "./ui/CartSummary";
 
 export default function CartPage() {
   return (
@@ -19,27 +20,7 @@ export default function CartPage() {
           </div>
 
           {/* Checkout*/}
-          <div className="bg-white rounded-xl shadow-xl p-4 h-fit order-first md:order-last">
-            <h2 className="text-2xl mb-2">Order summary</h2>
-            <div className="grid grid-cols-2">
-              <span>N°. products</span>
-              <span className="text-rigth">3 products</span>
-              <span>Subtotal</span>
-              <span className="text-rigth">$100</span>
-              <span>Taxes (15%)</span>
-              <span className="text-rigth">$15</span>
-              <span className="mt-5 text-2xl">Total:</span>
-              <span className="mt-5 text-2xl text-right">$115</span>
-            </div>
-            <div className="mt-5 mb-2 w-full">
-              <Link
-                href={"/checkout/address"}
-                className="flex btn-primary justify-center"
-              >
-                Checkout
-              </Link>
-            </div>
-          </div>
+          <CartSummary />
         </div>
       </div>
     </div>

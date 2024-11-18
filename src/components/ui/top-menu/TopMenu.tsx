@@ -23,7 +23,7 @@ const navItems = [
 
 export const TopMenu = () => {
   const openMenu = useUIStore((state) => state.openSideMenu);
-  const totalItemsInCart = useCartStore((state) => state.getTotalItems());
+  const totalItemsInCart = useCartStore((state) => state.getSummaryInformation().productsInCart);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
