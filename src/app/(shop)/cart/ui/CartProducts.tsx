@@ -11,6 +11,9 @@ export const CartProducts = () => {
   const updateProductQuantity = useCartStore(
     (state) => state.updateProductQuantity
   );
+  const removeProductFromCart = useCartStore(
+    (state) => state.removeProductFromCart
+  );
   const [loaded, setLoaded] = useState(false);
 
   // effect to avoid hydratation issue
@@ -57,7 +60,12 @@ export const CartProducts = () => {
                   updateProductQuantity(product, quantity)
                 }
               />
-              <button className="underline mt-3">Remove</button>
+              <button
+                className="underline mt-3"
+                onClick={() => removeProductFromCart(product)}
+              >
+                Remove
+              </button>
             </div>
           </div>
         ))}

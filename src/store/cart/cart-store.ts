@@ -7,8 +7,8 @@ interface State {
   cartItems: CartProduct[];
   getTotalItems: () => number;
   addProductToCart: (product: CartProduct) => void;
-  // removeFromCart:()=> void;
   updateProductQuantity: (product: CartProduct, value: number) => void;
+  removeProductFromCart: (product: CartProduct) => void;
 }
 
 export const useCartStore = create<State>()(
@@ -44,8 +44,9 @@ export const useCartStore = create<State>()(
 
         set({ cartItems: updatedCartProducts });
       },
-      updateProductQuantity: (product, value) => {
+      updateProductQuantity: (product: CartProduct, value: number) => {
         const { cartItems } = get();
+
         // if the product is already in the cart, just update the quantity
         const updatedCartProducts = cartItems.map((item) => {
           if (item.id === product.id && item.size === product.size) {
@@ -55,6 +56,11 @@ export const useCartStore = create<State>()(
         });
 
         set({ cartItems: updatedCartProducts });
+      },
+      removeProductFromCart: (product: CartProduct) => {
+        const { cartItems } = get();
+        const updatedItems = cartItems.filter((item) => item !== product);
+        set({ cartItems: updatedItems });
       },
     }),
     {
