@@ -4,12 +4,11 @@ import { getProductBySlug } from "@/actions";
 import {
   ProductMobileSlideShow,
   ProductSlideShow,
-  QuantitySelector,
-  SizeSelector,
   StockLabel,
 } from "@/components";
 import { titleFont } from "@/config/fonts";
 import { notFound } from "next/navigation";
+import { AddToCart } from "./ui/AddToCart";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -40,7 +39,6 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div>
-      back
       <div className="mt-5 mb-20 grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="col-span-1 md:col-span-2">
           <ProductMobileSlideShow
@@ -63,14 +61,8 @@ export default async function ProductPage({ params }: Props) {
           <StockLabel slug={slug} />
           <p className="text-lg mb-5">$ {product.price.toFixed(2)}</p>
 
-          <SizeSelector
-            selectedSize={product.sizes[0]}
-            availableSizes={product.sizes}
-          />
-
-          <QuantitySelector quantity={2} />
-
-          <button className="btn-primary my-5">Add to cart</button>
+          <AddToCart product={product}/>
+          
           <h3 className="font-bold text-sm">Description</h3>
           <article>
             <p className="font-light">{product.description}</p>
