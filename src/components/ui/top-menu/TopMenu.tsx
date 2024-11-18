@@ -8,15 +8,15 @@ import { useUIStore } from "@/store";
 const navItems = [
   {
     label: "Men",
-    href: "/category/men",
+    href: "/gender/men",
   },
   {
     label: "Women",
-    href: "/category/women",
+    href: "/gender/women",
   },
   {
     label: "Kid",
-    href: "/category/kid",
+    href: "/gender/kid",
   },
 ];
 

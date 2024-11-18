@@ -5,9 +5,7 @@ import Image from "next/image";
 import { IoCardOutline } from "react-icons/io5";
 
 interface Props {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>
 }
 
 const cartProducts = [
