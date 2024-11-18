@@ -39,7 +39,6 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div>
-      back
       <div className="mt-5 mb-20 grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="col-span-1 md:col-span-2">
           <ProductMobileSlideShow
