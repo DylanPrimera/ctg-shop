@@ -59,8 +59,10 @@ export const useCartStore = create<State>()(
       },
       removeProductFromCart: (product: CartProduct) => {
         const { cartItems } = get();
-        const updatedItems = cartItems.filter((item) => item !== product);
-        set({ cartItems: updatedItems });
+        const updatedProducts = cartItems.filter(
+          (item) => item.id !== product.id && item.size !== product.size
+        );
+        set({ cartItems: updatedProducts });
       },
     }),
     {
