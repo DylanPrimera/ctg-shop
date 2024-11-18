@@ -15,7 +15,7 @@ export const SizeSelector = ({ selectedSize, availableSizes, onSizeChange }: Pro
         {availableSizes.map((size) => (
           <button
             key={size}
-            className={clsx("mx-2 hover:underline text-lg", {
+            className={clsx("mx-2 antialiased hover:underline text-lg", {
               "underline": size === selectedSize,
             })}
             onClick={() => onSizeChange(size)}
