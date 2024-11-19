@@ -3,18 +3,15 @@ import { z } from "zod";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "./lib/prisma";
 import brcyptjs from "bcryptjs";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { Adapter } from "next-auth/adapters";
+// import { PrismaAdapter } from "@auth/prisma-adapter";
+// import { Adapter } from "next-auth/adapters";
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
-        console.log({ credentials });
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
-          console.log(parsedCredentials);
         if (!parsedCredentials.success) return null;
        
         const { email, password } = parsedCredentials.data;
@@ -32,7 +29,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password: _, ...userWithoutPassword } = user;
-        console.log({userWithoutPassword});
         return userWithoutPassword;
       },
     }),

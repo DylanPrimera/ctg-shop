@@ -12,6 +12,7 @@ import {
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { useUIStore } from "@/store";
 import clsx from "clsx";
+import { Logout } from "@/actions";
 
 const menuOptions = [
   {
@@ -28,11 +29,6 @@ const menuOptions = [
     title: "LogIn",
     icon: <IoLogInOutline size={20} />,
     href: "/auth/login",
-  },
-  {
-    title: "Exit",
-    icon: <IoLogOutOutline size={20} />,
-    href: "",
   },
 ];
 
@@ -57,6 +53,18 @@ const administrationOptions = [
 export const SideMenu = () => {
   const isMenuOpen = useUIStore((state) => state.isMenuOpen);
   const closeSideMenu = useUIStore((state) => state.closeSideMenu);
+
+  const handleClick = (clicked: boolean) => {
+    if (clicked) {
+      closeSideMenu();
+    }
+  };
+
+  const handleSignOut = async (clicked: boolean) => {
+    if (!clicked) return null;
+    closeSideMenu();
+    Logout();
+  };
 
   return (
     <div>
@@ -94,12 +102,26 @@ export const SideMenu = () => {
             />
           </div>
           {menuOptions.map((option) => (
-            <SidebarMenuItem key={option.title} {...option} />
+            <SidebarMenuItem
+              key={option.title}
+              {...option}
+              onChangeClick={(clicked) => handleClick(clicked)}
+            />
           ))}
           <hr className="w-full h-px bg-gray-200 my-10" />
           {administrationOptions.map((option) => (
-            <SidebarMenuItem key={option.title} {...option} />
+            <SidebarMenuItem
+              key={option.title}
+              {...option}
+              onChangeClick={(clicked) => handleClick(clicked)}
+            />
           ))}
+          <SidebarMenuItem
+            title="Logout"
+            icon={<IoLogOutOutline size={20} />}
+            href="/auth"
+            onChangeClick={handleSignOut}
+          />
         </nav>
       </aside>
     </div>
