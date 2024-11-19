@@ -4,8 +4,7 @@ import { signIn, signOut } from "@/auth";
 import prisma from "@/lib/prisma";
 import { AuthError } from "next-auth";
 import brcyptjs from "bcryptjs";
-
-// ...
+import { isRedirectError } from "next/dist/client/components/redirect";
 
 export async function authenticate(
   prevState: string | undefined,
@@ -31,8 +30,30 @@ export async function Logout() {
   await signOut();
 }
 
-export async function UserLogin(email: string, password: string) {
-  await signIn("credentials", { email, password, redirectTo:'/' });
+export async function UserLogin(
+  email: string,
+  password: string,
+  redirecTo: string = "/"
+) {
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: redirecTo,
+    });
+    return {
+      ok: true,
+      message: "User logged in successfully!",
+    };
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
+    console.log(error);
+    return {
+      ok: false,
+      message: "Invalid credentials",
+    };
+    // continue to handle other errors as normal
+  }
 }
 
 export async function RegisterUser(

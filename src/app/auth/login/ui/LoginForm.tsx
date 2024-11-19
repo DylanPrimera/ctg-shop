@@ -1,41 +1,69 @@
 "use client";
-import { authenticate } from "@/actions";
+import { UserLogin } from "@/actions";
 import clsx from "clsx";
 import Link from "next/link";
-import React, { useActionState } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { IoInformationOutline } from "react-icons/io5";
 
-export const LoginForm = () => {
-  const [errorMessage, formAction, isPending] = useActionState(
-    authenticate,
-    undefined
-  );
+interface FormInputs {
+  email: string;
+  password: string;
+}
+
+interface Props {
+  redirecTo?: string;
+}
+
+export const LoginForm = ({redirecTo}: Props) => {
+  const {
+    register,
+    handleSubmit,
+  } = useForm<FormInputs>();
+
+  const [isLogining, setIsLogining] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleLogin =async(data:FormInputs)=> {
+    const { email, password } = data;
+    setIsLogining(true);
+    const response = await UserLogin(email.toLowerCase(), password, redirecTo);
+    if(!response.ok) {
+      setIsLogining(false);
+      setErrorMessage(response.message);
+      return;
+    }
+  }
+
   return (
     <>
-      <form action={formAction} className="flex flex-col">
+      <form onSubmit={handleSubmit(handleLogin)} className="flex flex-col">
         <label htmlFor="email">Email</label>
         <input
           className="px-5 py-2 border bg-gray-200 rounded mb-5"
           type="email"
-          name="email"
           placeholder="example@example.com"
+          {...register("email", {
+            required: true,
+            pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+          })}
         />
 
         <label htmlFor="password">Password</label>
         <input
           className="px-5 py-2 border bg-gray-200 rounded mb-5"
           type="password"
-          name="password"
           placeholder="******"
+          {...register("password", { required: true, minLength: 6 })}
         />
 
         <button
           className={clsx({
-            "btn-primary": !isPending,
-            "btn-disabled": isPending,
+            "btn-primary": !isLogining,
+            "btn-disabled": isLogining,
           })}
           type="submit"
-          aria-disabled={isPending}
+          aria-disabled={isLogining}
         >
           Login
         </button>
@@ -56,7 +84,7 @@ export const LoginForm = () => {
           )}
         </div>
 
-        {/* divisor l ine */}
+        {/* divisor line */}
         <div className="flex items-center my-5">
           <div className="flex-1 border-t border-gray-500"></div>
           <div className="px-2 text-gray-800">O</div>
