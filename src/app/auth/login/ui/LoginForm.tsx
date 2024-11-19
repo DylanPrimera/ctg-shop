@@ -1,7 +1,9 @@
 "use client";
 import { authenticate } from "@/actions";
+import clsx from "clsx";
 import Link from "next/link";
 import React, { useActionState } from "react";
+import { IoInformationOutline } from "react-icons/io5";
 
 export const LoginForm = () => {
   const [errorMessage, formAction, isPending] = useActionState(
@@ -27,9 +29,32 @@ export const LoginForm = () => {
           placeholder="******"
         />
 
-        <button className="btn-primary" type="submit" aria-disabled={isPending}>
+        <button
+          className={clsx({
+            "btn-primary": !isPending,
+            "btn-disabled": isPending,
+          })}
+          type="submit"
+          aria-disabled={isPending}
+        >
           Login
         </button>
+
+        <div
+          className="flex h-8 items-end space-x-1 my-3"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {errorMessage && (
+            <>
+              <IoInformationOutline
+                className="h-5 w-5 text-red-500"
+                size={15}
+              />
+              <p className="text-sm text-red-500">{errorMessage}</p>
+            </>
+          )}
+        </div>
 
         {/* divisor l ine */}
         <div className="flex items-center my-5">
@@ -41,11 +66,6 @@ export const LoginForm = () => {
         <Link href="/auth/register" className="btn-secondary text-center">
           Register
         </Link>
-        {errorMessage && (
-          <p className="bg-red-500 text-white my-5 rounded-lg p-2 text-center">
-            {errorMessage}
-          </p>
-        )}
       </form>
     </>
   );

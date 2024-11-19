@@ -3,7 +3,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface State {
-  // cartQuantity: number;
   cartItems: CartProduct[];
   getSummaryInformation: () => CartSummaryInformation;
   addProductToCart: (product: CartProduct) => void;
