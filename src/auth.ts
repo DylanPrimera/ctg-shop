@@ -13,7 +13,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
         if (!parsedCredentials.success) return null;
-       
+
         const { email, password } = parsedCredentials.data;
 
         // Search user by email
@@ -36,5 +36,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/auth/signin",
     newUser: "/auth/register",
+  },
+  callbacks: {
+    async signIn() {
+      return true;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.data = user;
+      }
+      return token;
+    },
+    async session({ session, token, user }) {
+      console.log({ session, token, user });
+      session.user = token?.data as never;
+      return session;
+    },
   },
 });
