@@ -36,6 +36,18 @@ export async function UserLogin(
   redirecTo: string = "/"
 ) {
   try {
+    const userExists = await prisma.user.findUnique({
+      where: {
+        email: email.toLowerCase(),
+      },
+    });
+
+    if (!userExists) {
+      return {
+        ok: false,
+        message: "User does not exist",
+      };
+    }
     await signIn("credentials", {
       email,
       password,
@@ -47,12 +59,10 @@ export async function UserLogin(
     };
   } catch (error) {
     if (isRedirectError(error)) throw error;
-    console.log(error);
     return {
       ok: false,
       message: "Invalid credentials",
     };
-    // continue to handle other errors as normal
   }
 }
 
