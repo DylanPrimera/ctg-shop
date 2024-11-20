@@ -1,4 +1,4 @@
-import { Footer, SideMenu, TopMenu } from "@/components";
+import { Footer, SideBar, TopMenu } from "@/components";
 
 export default function ShopLayout({
   children,
@@ -8,7 +8,7 @@ export default function ShopLayout({
   return (
     <main className="flex-[1]">
       <TopMenu />
-      <SideMenu />
+      <SideBar/>
       <div className="px-3 sm:px-10">{children}</div>
       <Footer/>
     </main>

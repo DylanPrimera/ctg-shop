@@ -12,8 +12,14 @@ import {
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { useUIStore } from "@/store";
 import clsx from "clsx";
+import { Logout } from "@/actions";
 
-const menuOptions = [
+interface Props {
+  isAuthenticated: boolean;
+  isAdmin: boolean;
+}
+
+const USER_OPTIONS = [
   {
     title: "Profile",
     icon: <IoPersonOutline size={20} />,
@@ -24,19 +30,9 @@ const menuOptions = [
     icon: <IoTicketOutline size={20} />,
     href: "/orders",
   },
-  {
-    title: "LogIn",
-    icon: <IoLogInOutline size={20} />,
-    href: "/auth/login",
-  },
-  {
-    title: "Exit",
-    icon: <IoLogOutOutline size={20} />,
-    href: "",
-  },
 ];
 
-const administrationOptions = [
+const ADMIN_OPTIONS = [
   {
     title: "Products",
     icon: <IoShirtOutline size={20} />,
@@ -54,9 +50,21 @@ const administrationOptions = [
   },
 ];
 
-export const SideMenu = () => {
+export const SideMenu = ({ isAuthenticated = false, isAdmin }: Props) => {
   const isMenuOpen = useUIStore((state) => state.isMenuOpen);
   const closeSideMenu = useUIStore((state) => state.closeSideMenu);
+
+  const handleClick = (clicked: boolean) => {
+    if (clicked) {
+      closeSideMenu();
+    }
+  };
+
+  const handleSignOut = async (clicked: boolean) => {
+    if (!clicked) return null;
+    closeSideMenu();
+    Logout();
+  };
 
   return (
     <div>
@@ -93,13 +101,44 @@ export const SideMenu = () => {
               className="w-full bg-gray-50 pl-10 py-1 pr-10 rounded border-b-2  border-gray-200 focus:outline-none focus:border-blue-500"
             />
           </div>
-          {menuOptions.map((option) => (
-            <SidebarMenuItem key={option.title} {...option} />
-          ))}
-          <hr className="w-full h-px bg-gray-200 my-10" />
-          {administrationOptions.map((option) => (
-            <SidebarMenuItem key={option.title} {...option} />
-          ))}
+          {isAuthenticated &&
+            !isAdmin &&
+            USER_OPTIONS.map((option) => (
+              <SidebarMenuItem
+                key={option.title}
+                {...option}
+                onChangeClick={(clicked) => handleClick(clicked)}
+              />
+            ))}
+
+          {isAuthenticated &&
+            isAdmin &&
+            ADMIN_OPTIONS.map((option) => (
+              <SidebarMenuItem
+                key={option.title}
+                {...option}
+                onChangeClick={(clicked) => handleClick(clicked)}
+              />
+            ))}
+
+          {isAuthenticated ? (
+            <>
+              <hr className="w-full h-px bg-gray-200 mt-5 mb-6" />
+              <SidebarMenuItem
+                title="Logout"
+                icon={<IoLogOutOutline size={20} />}
+                href="/auth"
+                onChangeClick={handleSignOut}
+              />
+            </>
+          ) : (
+            <SidebarMenuItem
+              title="Login"
+              icon={<IoLogInOutline size={20} />}
+              href="/auth"
+              onChangeClick={(clicked) => handleClick(clicked)}
+            />
+          )}
         </nav>
       </aside>
     </div>

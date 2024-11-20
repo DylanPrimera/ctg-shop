@@ -30,10 +30,25 @@ enum Gender {
   unisex
 }
 
+enum Role {
+  admin
+  user
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  name          String
+  password      String
+  role          Role      @default(user)
+}
+
 model Category {
-  id        String    @id @default(uuid())
-  name      String    @unique
-  Product   Product[]
+  id      String    @id @default(uuid())
+  name    String    @unique
+  Product Product[]
 }
 
 model Product {
