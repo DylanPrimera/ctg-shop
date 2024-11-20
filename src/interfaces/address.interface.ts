@@ -5,7 +5,7 @@ export interface Address {
     address2?: string;
     zipCode: string;
     city: string;
-    country: string | number;
-    phone: string;
-    remember: boolean;
+    country: string;
+    phone: number | string;
+    remember?: boolean;
 }

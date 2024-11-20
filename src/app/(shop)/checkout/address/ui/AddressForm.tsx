@@ -1,30 +1,36 @@
 "use client";
 
+import { setUserAddress } from "@/actions";
 import { Address, Country } from "@/interfaces";
 import { useAddressStore } from "@/store";
 import clsx from "clsx";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-interface FormInputs extends Address {
-  inClicked?: boolean;
-}
+// interface FormInputs extends Address {
+//   inClicked?: boolean;
+// }
 
 interface Props {
   countries: Country[];
 }
 
 export const AddressForm = ({ countries }: Props) => {
+  const { data: session } = useSession();
+
   const {
     handleSubmit,
     register,
     reset,
     formState: { isValid },
-  } = useForm<FormInputs>();
+  } = useForm<Address>();
   const address = useAddressStore((state) => state.address);
   const setAddress = useAddressStore((state) => state.setAddress);
 
-  const submitAddress = (data: FormInputs) => {
+  const submitAddress = (data: Address) => {
+    const { remember, ...rest } = data;
+    if (remember) setUserAddress(rest, session!.user.id);
     setAddress(data);
   };
 
@@ -118,7 +124,7 @@ export const AddressForm = ({ countries }: Props) => {
         <div className="flex flex-col mb-2">
           <span>Phone</span>
           <input
-            type="text"
+            type="number"
             placeholder="Enter ur phone"
             className="p-2 border rounded-md bg-gray-200 outline-none"
             {...register("phone", { required: true })}
@@ -135,8 +141,7 @@ export const AddressForm = ({ countries }: Props) => {
                 type="checkbox"
                 className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border bg-white  transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-500 before:opacity-0 before:transition-opacity checked:border-blue-500 checked:bg-blue-500 checked:before:bg-blue-500 hover:before:opacity-10"
                 id="checkbox"
-                {...register("remember", { required: false })}
-                checked={address.remember}
+                {...register("remember")}
               />
               <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
                 <svg

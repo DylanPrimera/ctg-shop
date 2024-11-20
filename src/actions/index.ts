@@ -1,3 +1,13 @@
-export { getProducts, getProductBySlug, getStockBySlug } from "./products/products.actions";
-export { authenticate, Logout, RegisterUser, UserLogin } from './auth/auth.actions'
-export * from './countries/countries.actions';
+export {
+  getProducts,
+  getProductBySlug,
+  getStockBySlug,
+} from "./products/products.actions";
+export {
+  authenticate,
+  Logout,
+  RegisterUser,
+  UserLogin,
+} from "./auth/auth.actions";
+export * from "./countries/countries.actions";
+export { setUserAddress } from "./address/address.actions";
