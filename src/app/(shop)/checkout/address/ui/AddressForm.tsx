@@ -1,6 +1,6 @@
 "use client";
 
-import { Address } from "@/interfaces";
+import { Address, Country } from "@/interfaces";
 import { useAddressStore } from "@/store";
 import clsx from "clsx";
 import { useEffect } from "react";
@@ -10,31 +10,29 @@ interface FormInputs extends Address {
   inClicked?: boolean;
 }
 
-export const AddressForm = () => {
+interface Props {
+  countries: Country[];
+}
+
+export const AddressForm = ({ countries }: Props) => {
   const {
     handleSubmit,
     register,
-    setValue,
+    reset,
     formState: { isValid },
   } = useForm<FormInputs>();
   const address = useAddressStore((state) => state.address);
-  const addAdress = useAddressStore((state) => state.addAdress);
+  const setAddress = useAddressStore((state) => state.setAddress);
 
   const submitAddress = (data: FormInputs) => {
-    addAdress(data);
+    setAddress(data);
   };
 
   useEffect(() => {
-    setValue("firstName", address.firstName);
-    setValue("lastName", address.lastName);
-    setValue("address1", address.address1);
-    setValue("address2", address.address2);
-    setValue("zipCode", address.zipCode);
-    setValue("city", address.city);
-    setValue("country", address.country);
-    setValue("phone", address.phone);
-    setValue("remember", address.remember);
-  }, [address]);
+    if (address.firstName) {
+      reset(address);
+    }
+  }, [address.firstName]);
 
   return (
     <>
@@ -109,7 +107,11 @@ export const AddressForm = () => {
             {...register("country", { required: true })}
           >
             <option value="">[ Select ]</option>
-            <option value="COL">Colombia</option>
+            {countries.map((country) => (
+              <option key={country.id} value={country.id}>
+                {country.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -133,6 +135,8 @@ export const AddressForm = () => {
                 type="checkbox"
                 className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border bg-white  transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-500 before:opacity-0 before:transition-opacity checked:border-blue-500 checked:bg-blue-500 checked:before:bg-blue-500 hover:before:opacity-10"
                 id="checkbox"
+                {...register("remember", { required: false })}
+                checked={address.remember}
               />
               <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
                 <svg

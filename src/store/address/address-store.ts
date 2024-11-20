@@ -4,13 +4,12 @@ import { persist } from "zustand/middleware";
 
 interface State {
   address: Address;
-  addAdress: (address: Address) => void;
-  getAddress: () => Address;
+  setAddress: (address: Address) => void;
 }
 
 export const useAddressStore = create<State>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       address: {
         firstName: "",
         lastName: "",
@@ -22,13 +21,9 @@ export const useAddressStore = create<State>()(
         phone: "",
         remember: false,
       },
-      addAdress: (address: Address) => {
+      setAddress: (address: Address) => {
         set({ address });
-      },
-      getAddress: (): Address => {
-        const { address } = get();
-        return address;
-      },
+      }
     }),
     { name: "address-storage" }
   )
