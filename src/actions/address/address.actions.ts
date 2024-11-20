@@ -11,7 +11,8 @@ export const setUserAddress = async (address: Address, userId: string) => {
       address: userAddress,
     };
   } catch (error) {
-    console.log("uno", error);
+    console.error(error)
+    throw 'Failed to set user address';
   }
 };
 
@@ -33,7 +34,7 @@ const createOrReplaceAddress = async (address: Address, userId: string) => {
       zipCode: address.zipCode,
       countryId: address.country,
     };
-    
+
     if (addressDb === null) {
       const newAddress = await prisma.userAddress.create({
         data: addressToSave,
@@ -50,6 +51,28 @@ const createOrReplaceAddress = async (address: Address, userId: string) => {
 
     return updatedAddress;
   } catch (error) {
-    console.log("dos", error);
+    console.error(error)
+    throw 'Failed to create or replace user address';
+  }
+};
+
+export const deleteUserAddress = async (userId: string) => {
+  try {
+    const isAlreadySaved = await prisma.userAddress.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    if (!isAlreadySaved) return;
+
+    await prisma.userAddress.delete({
+      where: {
+        userId,
+      },
+    });
+  } catch (error) {
+    console.error(error)
+    throw 'Failed to delete user address';
   }
 };

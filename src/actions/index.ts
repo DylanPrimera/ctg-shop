@@ -10,4 +10,4 @@ export {
   UserLogin,
 } from "./auth/auth.actions";
 export * from "./countries/countries.actions";
-export { setUserAddress } from "./address/address.actions";
+export { setUserAddress, deleteUserAddress } from "./address/address.actions";
