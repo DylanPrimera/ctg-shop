@@ -40,7 +40,7 @@ export const LoginForm = ({redirecTo}: Props) => {
       <form onSubmit={handleSubmit(handleLogin)} className="flex flex-col">
         <label htmlFor="email">Email</label>
         <input
-          className="px-5 py-2 border bg-gray-200 rounded mb-5"
+          className="px-5 py-2 border bg-gray-200 rounded mb-5 outline-none"
           type="email"
           placeholder="example@example.com"
           {...register("email", {
@@ -51,7 +51,7 @@ export const LoginForm = ({redirecTo}: Props) => {
 
         <label htmlFor="password">Password</label>
         <input
-          className="px-5 py-2 border bg-gray-200 rounded mb-5"
+          className="px-5 py-2 border bg-gray-200 rounded mb-5 outline-none"
           type="password"
           placeholder="******"
           {...register("password", { required: true, minLength: 6 })}

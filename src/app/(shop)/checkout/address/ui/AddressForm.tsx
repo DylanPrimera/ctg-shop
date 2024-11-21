@@ -9,9 +9,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-// interface FormInputs extends Address {
-//   inClicked?: boolean;
-// }
 
 interface Props {
   countries: Country[];
@@ -26,7 +23,11 @@ export const AddressForm = ({ countries, userAddress }: Props) => {
     register,
     reset,
     formState: { isValid },
-  } = useForm<Address>();
+  } = useForm<Address>({
+    defaultValues: {
+      ...userAddress
+    }
+  });
   const address = useAddressStore((state) => state.address);
   const setAddress = useAddressStore((state) => state.setAddress);
 
@@ -43,10 +44,7 @@ export const AddressForm = ({ countries, userAddress }: Props) => {
   };
 
   useEffect(() => {
-    if (address.firstName === "" && userAddress) {
-      reset(userAddress);
-    }
-    if (address.firstName && !userAddress) {
+    if (address.firstName) {
       reset(address);
     }
   }, [address.firstName]);
