@@ -152,57 +152,46 @@ export const placeOrder = async (
 
 export const getOrderById = async (orderId: string) => {
   try {
+    const session = await auth();
+    if (!session?.user.id) return { ok: false, error: "No user session" };
+
     const orderDB = await prisma.order.findUnique({
-      where: { id: orderId },
-    });
-
-    const orderAddress = await prisma.orderAddress.findFirst({
-      where: { orderId: orderId },
-    });
-
-    const orderWithAddress = {
-      ...orderDB,
-      orderAddress: orderAddress
-    }
-
-    const orderItems = await prisma.orderItem.findMany({
-      where: { orderId: orderId },
-    });
-
-    const productsOrder = await prisma.product.findMany({
-      where: {
-        id: {
-          in: orderItems.map((item) => item.productId),
-        },
-      },
+      where: { id: orderId, userId: session.user.id },
       include: {
-        images: {
+        OrderAddress: true,
+        orderItem: {
           select: {
-            url: true,
+            price: true,
+            quantity: true,
+            size: true,
+            product: {
+              select: {
+                title: true,
+                slug: true,
+                images: {
+                  select: {
+                    url: true,
+                  },
+                  take: 1,
+                },
+              },
+            },
           },
         },
       },
     });
 
-    const mappedProducts = orderItems.map((item) => {
-      const product = productsOrder.find((p) => p.id === item.productId);
-      return {
-        id: product?.id,
-        title: product?.title,
-        size: item.size,
-        price: item.price,
-        slug: product?.slug,
-        image: product?.images[0].url,
-        quantity: item.quantity,
-      };
-    });
-
+    if(session.user.role === 'user') {
+      if(session.user.id !== orderDB?.userId) {
+        throw new Error('Order not belongs to the current user');
+      }
+    }
     if (!orderDB) return { ok: false, message: "Order not found" };
 
     return {
       ok: true,
-      order: orderWithAddress,
-      products: mappedProducts,
+      order: orderDB,
+      products: orderDB.orderItem,
     };
   } catch (error: any) {
     return {

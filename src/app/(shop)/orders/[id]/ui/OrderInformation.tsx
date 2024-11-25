@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const OrderInformation = ({ order }: Props) => {
-  const { orderAddress: address } = order;
+  const { OrderAddress: address } = order;
   return (
     <>
       <div className="bg-white rounded-xl shadow-xl p-4 order-first md:order-last h-fit">
@@ -29,17 +29,17 @@ export const OrderInformation = ({ order }: Props) => {
         <h2 className="text-2xl mb-2 font-bold">Order summary</h2>
         <div className="grid grid-cols-2">
           <span>N°. products</span>
-          <span className="text-rigth">
+          <span className="text-end">
             {order.itemsInOrder === 1
               ? "1 product"
               : `${order.itemsInOrder} products`}
           </span>
           <span>Subtotal</span>
-          <span className="text-rigth">
+          <span className="text-end">
             {currencyFormatter(order.subTotal)}
           </span>
           <span>Taxes (15%)</span>
-          <span className="text-rigth">{currencyFormatter(order.taxes)}</span>
+          <span className="text-end">{currencyFormatter(order.taxes)}</span>
           <span className="mt-5 text-2xl">Total:</span>
           <span className="mt-5 text-2xl text-right">
             {currencyFormatter(order.total)}

@@ -1,7 +1,7 @@
 import { Title } from "@/components";
 import { OrderProducts } from "./ui/OrderProducts";
 import { getOrderById } from "@/actions";
-import { CartProduct, Order } from "@/interfaces";
+import { Order } from "@/interfaces";
 import { OrderInformation } from "./ui/OrderInformation";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -35,7 +35,7 @@ export default async function OrderPage({ params }: Props) {
           <div className="flex flex-col mt-5 order-last md:order-first">
             <PayedTag isPaid={order?.isPaid as boolean} />
             {/* Cart Items*/}
-            <OrderProducts products={products as CartProduct[]} />
+            <OrderProducts products={products} />
           </div>
 
           {/* Checkout*/}
