@@ -13,9 +13,10 @@ export const PlaceOrder = () => {
   const [loaded, setLoaded] = useState(false);
   const [isPlacingOrder, setPlacingOrder] = useState(false);
   const router = useRouter();
+
   const address = useAddressStore((state) => state.address);
   const cart = useCartStore((state) => state.cartItems);
-  const { getSummaryInformation } = useCartStore();
+  const { getSummaryInformation, clearCart } = useCartStore();
   const { subTotal, taxes, total, productsInCart } = getSummaryInformation();
 
   useEffect(() => {
@@ -30,7 +31,9 @@ export const PlaceOrder = () => {
       size: product.size,
     }));
 
+    // server action
     const orderResponse = await placeOrder(productsToOrder, address);
+    console.log({orderResponse});
     if (!orderResponse?.ok) {
       setPlacingOrder(false);
       toast.error(orderResponse?.message, {
@@ -42,6 +45,10 @@ export const PlaceOrder = () => {
       position: "top-right",
     });
     setPlacingOrder(false);
+    // clear cart
+    clearCart();
+    // redirection
+    router.replace(`/orders/${orderResponse?.order?.id}`);
   };
 
   if (!loaded) {

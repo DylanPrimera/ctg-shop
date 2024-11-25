@@ -134,9 +134,10 @@ export const placeOrder = async (
       return {
         ok: true,
         message: "Order placed successfully",
-        order: prismaTx.order.id,
+        order: prismaTx.order,
         prismaTx: prismaTx,
       };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return {
         ok: false,
