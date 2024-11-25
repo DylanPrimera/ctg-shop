@@ -17,4 +17,4 @@ export {
   getStockBySlug,
 } from "./products/products.actions";
 
-export { placeOrder } from "./order/order.actions";
+export { placeOrder, getOrderById } from "./order/order.actions";

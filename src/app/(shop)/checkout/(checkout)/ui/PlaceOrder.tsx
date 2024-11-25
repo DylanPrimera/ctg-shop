@@ -16,7 +16,7 @@ export const PlaceOrder = () => {
 
   const address = useAddressStore((state) => state.address);
   const cart = useCartStore((state) => state.cartItems);
-  const { getSummaryInformation } = useCartStore();
+  const { getSummaryInformation, clearCart } = useCartStore();
   const { subTotal, taxes, total, productsInCart } = getSummaryInformation();
 
   useEffect(() => {
@@ -47,6 +47,10 @@ export const PlaceOrder = () => {
     });
     await sleep(3);
     setPlacingOrder(false);
+
+    setTimeout(() => {
+      clearCart();
+    }, 0);
     // redirection
     router.replace("/orders/" + orderResponse?.order?.id);
   };

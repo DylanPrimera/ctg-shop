@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { auth } from "@/auth";
@@ -107,7 +108,7 @@ export const placeOrder = async (
                 }),
               },
             },
-            isPaid: true
+            isPaid: true,
           },
         });
 
@@ -138,7 +139,6 @@ export const placeOrder = async (
         order: prismaTx.order,
         prismaTx: prismaTx,
       };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return {
         ok: false,
@@ -147,5 +147,67 @@ export const placeOrder = async (
     }
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const getOrderById = async (orderId: string) => {
+  try {
+    const orderDB = await prisma.order.findUnique({
+      where: { id: orderId },
+    });
+
+    const orderAddress = await prisma.orderAddress.findFirst({
+      where: { orderId: orderId },
+    });
+
+    const orderWithAddress = {
+      ...orderDB,
+      orderAddress: orderAddress
+    }
+
+    const orderItems = await prisma.orderItem.findMany({
+      where: { orderId: orderId },
+    });
+
+    const productsOrder = await prisma.product.findMany({
+      where: {
+        id: {
+          in: orderItems.map((item) => item.productId),
+        },
+      },
+      include: {
+        images: {
+          select: {
+            url: true,
+          },
+        },
+      },
+    });
+
+    const mappedProducts = orderItems.map((item) => {
+      const product = productsOrder.find((p) => p.id === item.productId);
+      return {
+        id: product?.id,
+        title: product?.title,
+        size: item.size,
+        price: item.price,
+        slug: product?.slug,
+        image: product?.images[0].url,
+        quantity: item.quantity,
+      };
+    });
+
+    if (!orderDB) return { ok: false, message: "Order not found" };
+
+    return {
+      ok: true,
+      order: orderWithAddress,
+      products: mappedProducts,
+    };
+  } catch (error: any) {
+    return {
+      ok: false,
+      message: error.message,
+    };
   }
 };
