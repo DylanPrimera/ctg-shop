@@ -31,7 +31,6 @@ export const AddressForm = ({ countries, userAddress }: Props) => {
   const setAddress = useAddressStore((state) => state.setAddress);
 
   const submitAddress = async (data: Address) => {
-    console.log(session)
     const { remember, ...rest } = data;
     setAddress(rest);
     if (remember) {

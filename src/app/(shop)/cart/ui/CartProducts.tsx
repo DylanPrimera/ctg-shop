@@ -57,7 +57,7 @@ export const CartProducts = () => {
               <QuantitySelector
                 quantity={product.quantity}
                 onQuantityChange={(quantity) =>
-                  updateProductQuantity(product, quantity)
+                updateProductQuantity(product, quantity)
                 }
               />
               <button

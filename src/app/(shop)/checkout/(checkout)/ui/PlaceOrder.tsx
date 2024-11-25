@@ -2,7 +2,7 @@
 import { placeOrder } from "@/actions";
 import { Skeleton } from "@/components";
 import { useAddressStore, useCartStore } from "@/store";
-import { currencyFormatter } from "@/utils";
+import { currencyFormatter, sleep } from "@/utils";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ export const PlaceOrder = () => {
 
   const address = useAddressStore((state) => state.address);
   const cart = useCartStore((state) => state.cartItems);
-  const { getSummaryInformation, clearCart } = useCartStore();
+  const { getSummaryInformation } = useCartStore();
   const { subTotal, taxes, total, productsInCart } = getSummaryInformation();
 
   useEffect(() => {
@@ -33,7 +33,6 @@ export const PlaceOrder = () => {
 
     // server action
     const orderResponse = await placeOrder(productsToOrder, address);
-    console.log({orderResponse});
     if (!orderResponse?.ok) {
       setPlacingOrder(false);
       toast.error(orderResponse?.message, {
@@ -41,14 +40,15 @@ export const PlaceOrder = () => {
       });
       return;
     }
+
+ 
     toast.success(orderResponse?.message, {
       position: "top-right",
     });
+    await sleep(3);
     setPlacingOrder(false);
-    // clear cart
-    clearCart();
     // redirection
-    router.replace(`/orders/${orderResponse?.order?.id}`);
+    router.replace("/orders/" + orderResponse?.order?.id);
   };
 
   if (!loaded) {

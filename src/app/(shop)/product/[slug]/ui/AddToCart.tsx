@@ -67,7 +67,6 @@ export const AddToCart = ({ product }: Props) => {
           <QuantitySelector
             quantity={quantity}
             onQuantityChange={handleQuantityChange}
-            maxQuantity={product.inStock}
             customClass="mt-5 mb-2"
           />
         </>
