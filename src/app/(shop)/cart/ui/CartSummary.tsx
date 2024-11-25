@@ -24,15 +24,15 @@ export const CartSummary = () => {
           <h2 className="text-2xl mb-2">Order summary</h2>
           <div className="grid grid-cols-2">
             <span className="antialiased">N°. products</span>
-            <span className="text-rigth antialiased">
+            <span className="text-end antialiased">
               {productsInCart === 1 ? "1 product" : `${productsInCart} products`}
             </span>
             <span className="antialiased">Subtotal</span>
-            <span className="text-rigth antialiased"> {currencyFormatter(subTotal)}</span>
+            <span className="text-end antialiased"> {currencyFormatter(subTotal)}</span>
             <span className="antialiased">Taxes (15%)</span>
-            <span className="text-rigth antialiased"> {currencyFormatter(taxes)}</span>
+            <span className="text-end antialiased"> {currencyFormatter(taxes)}</span>
             <span className="mt-5 text-2xl antialiased">Total:</span>
-            <span className="mt-5 text-2xl text-right antialiased">
+            <span className="mt-5 text-2xl text-end antialiased">
                {currencyFormatter(total)}
             </span>
           </div>

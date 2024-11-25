@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-
 interface Props {
   countries: Country[];
   userAddress?: Partial<Address>;
@@ -25,22 +24,23 @@ export const AddressForm = ({ countries, userAddress }: Props) => {
     formState: { isValid },
   } = useForm<Address>({
     defaultValues: {
-      ...userAddress
-    }
+      ...userAddress,
+    },
   });
   const address = useAddressStore((state) => state.address);
   const setAddress = useAddressStore((state) => state.setAddress);
 
   const submitAddress = async (data: Address) => {
-    setAddress(data);
+    console.log(session)
     const { remember, ...rest } = data;
+    setAddress(rest);
     if (remember) {
-      await setUserAddress(rest, session!.user.id);
+      await setUserAddress(rest, session?.user.id as string);
     } else {
-      await deleteUserAddress(session!.user.id);
+      await deleteUserAddress(session?.user.id as string);
     }
 
-    router.push('/checkout')
+    router.push("/checkout");
   };
 
   useEffect(() => {
@@ -173,7 +173,7 @@ export const AddressForm = ({ countries, userAddress }: Props) => {
           </div>
           <button
             type="submit"
-            className={clsx("flex w-full sm:w-1/2 justify-center", {
+            className={clsx("flex w-full justify-center", {
               "btn-disabled": !isValid,
               "btn-primary": isValid,
             })}

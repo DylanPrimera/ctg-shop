@@ -16,3 +16,5 @@ export {
   getProductBySlug,
   getStockBySlug,
 } from "./products/products.actions";
+
+export { placeOrder } from "./order/order.actions";

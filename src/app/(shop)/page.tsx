@@ -2,7 +2,7 @@ export const revalidate = 60;
 
 import { getProducts } from "@/actions/products/products.actions";
 import { Pagination, ProductsGrid, Title } from "@/components";
-import { redirect } from "next/navigation";
+
 
 interface Props {
   searchParams: Promise<{ page?: string }>
@@ -15,8 +15,6 @@ export default async function Home({ searchParams }: Props) {
     page: pageParam,
   });
 
-
-  if (products.length === 0) redirect("/");
 
   return (
     <>
