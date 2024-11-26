@@ -11,6 +11,85 @@ interface ProductToOrder {
   size: ValidSize;
 }
 
+interface Filters {
+  page?: number;
+  take?: number;
+}
+
+export const getOrders = async ({ page = 1, take = 10 }: Filters) => {
+  if (isNaN(Number(page)) || page < 1) page = 1;
+  try {
+    const session = await auth();
+    let orders;
+    let totalPages = 0;
+
+    if (!session?.user.id) {
+      return {
+        ok: false,
+        message: "No user session",
+      };
+    }
+    if (session?.user.role === "user") {
+      orders = await prisma.order.findMany({
+        take,
+        skip: (page - 1) * take,
+        where: {
+          userId: session?.user.id,
+        },
+        orderBy:{
+          isPaid: "asc"
+        },
+        include: {
+          OrderAddress: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+      totalPages = Math.ceil(
+        (await prisma.order.count({
+          where: {
+            userId: session?.user.id,
+          },
+        })) / take
+      );
+    } else {
+      orders = await prisma.order.findMany({
+        take,
+        skip: (page - 1) * take,
+        orderBy:{
+          isPaid: "asc"
+        },
+        include: {
+          OrderAddress: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+      totalPages = Math.ceil(
+        (await prisma.order.count()) / take
+      );
+    }
+
+    return {
+      ok: true,
+      orders: orders,
+      totalPages,
+      currentPage: page,
+    };
+  } catch (error: any) {
+    return {
+      ok: false,
+      error: error.message,
+    };
+  }
+};
+
 export const placeOrder = async (
   products: ProductToOrder[],
   address: Address
@@ -181,9 +260,9 @@ export const getOrderById = async (orderId: string) => {
       },
     });
 
-    if(session.user.role === 'user') {
-      if(session.user.id !== orderDB?.userId) {
-        throw new Error('Order not belongs to the current user');
+    if (session.user.role === "user") {
+      if (session.user.id !== orderDB?.userId) {
+        throw new Error("Order not belongs to the current user");
       }
     }
     if (!orderDB) return { ok: false, message: "Order not found" };
