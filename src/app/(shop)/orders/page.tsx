@@ -7,6 +7,11 @@ interface Props {
   searchParams: Promise<{ page: string }>;
 }
 
+export const metadata = {
+  title: "Users Orders",
+  description: "List of orders placed by users.",
+};
+
 export default async function OrdersPage({ searchParams }: Props) {
   const { page } = await searchParams;
   const pageParam = page ? parseInt(page) : 1;
