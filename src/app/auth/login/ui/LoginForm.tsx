@@ -1,10 +1,11 @@
 "use client";
 import { UserLogin } from "@/actions";
+import { useToastStore } from "@/store";
 import clsx from "clsx";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { IoInformationOutline } from "react-icons/io5";
+// import { IoInformationOutline } from "react-icons/io5";
 
 interface FormInputs {
   email: string;
@@ -22,17 +23,20 @@ export const LoginForm = ({redirecTo}: Props) => {
   } = useForm<FormInputs>();
 
   const [isLogining, setIsLogining] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+
+  const showToast = useToastStore((state)=> state.showToast)
 
   const handleLogin =async(data:FormInputs)=> {
     const { email, password } = data;
     setIsLogining(true);
     const response = await UserLogin(email.toLowerCase(), password, redirecTo);
+    showToast(response.message, "success");
     if(!response.ok) {
       setIsLogining(false);
-      setErrorMessage(response.message);
+      showToast(response.message, "error")
       return;
     }
+  
   }
 
   return (
@@ -73,7 +77,7 @@ export const LoginForm = ({redirecTo}: Props) => {
           aria-live="polite"
           aria-atomic="true"
         >
-          {errorMessage && (
+          {/* {errorMessage && (
             <>
               <IoInformationOutline
                 className="h-5 w-5 text-red-500"
@@ -81,7 +85,7 @@ export const LoginForm = ({redirecTo}: Props) => {
               />
               <p className="text-sm text-red-500">{errorMessage}</p>
             </>
-          )}
+          )} */}
         </div>
 
         {/* divisor line */}

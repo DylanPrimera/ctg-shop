@@ -16,3 +16,5 @@ export {
   getProductBySlug,
   getStockBySlug,
 } from "./products/products.actions";
+
+export { getOrders, placeOrder, getOrderById } from "./order/order.actions";

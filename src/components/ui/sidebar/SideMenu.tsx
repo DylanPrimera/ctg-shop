@@ -36,17 +36,17 @@ const ADMIN_OPTIONS = [
   {
     title: "Products",
     icon: <IoShirtOutline size={20} />,
-    href: "/profile",
+    href: "/",
   },
   {
     title: "Orders",
     icon: <IoTicketOutline size={20} />,
-    href: "/profile",
+    href: "/orders",
   },
   {
     title: "Users",
     icon: <IoPeopleOutline size={20} />,
-    href: "/profile",
+    href: "/users",
   },
 ];
 

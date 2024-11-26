@@ -1,19 +1,14 @@
 "use client";
-import { QuantitySelector, Skeleton } from "@/components";
+import {  Skeleton } from "@/components";
+import { CartProduct } from "@/interfaces";
 import { useCartStore } from "@/store";
+import { currencyFormatter } from "@/utils";
 import Image from "next/image";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export const CartProducts = () => {
+export const ProductsInCart = () => {
   const cartProducts = useCartStore((state) => state.cartItems);
-  const updateProductQuantity = useCartStore(
-    (state) => state.updateProductQuantity
-  );
-  const removeProductFromCart = useCartStore(
-    (state) => state.removeProductFromCart
-  );
   const [loaded, setLoaded] = useState(false);
 
   // effect to avoid hydratation issue
@@ -29,10 +24,10 @@ export const CartProducts = () => {
   if (loaded) {
     return (
       <>
-        {cartProducts.map((product) => (
+        {cartProducts.map((product: CartProduct) => (
           <div
             key={`${product.slug}-${product.size}`}
-            className="flex items-center mb-5"
+            className="flex mb-5"
           >
             <Image
               src={`/products/${product.image}`}
@@ -45,27 +40,13 @@ export const CartProducts = () => {
               <div className="flex items-center gap-1">
                 <p>{product.size}</p>
                 <span>-</span>
-                <Link
-                  href={`/product/${product.slug}`}
-                  className="hover:underline hover:text-gray-700 antialiased cursor-pointer"
-                >
+                <span className="antialiased">
                   {product.title}
-                </Link>
+                </span>
               </div>
+              <p className="text-sm antialiased my-1">Quantity: {product.quantity}</p>
 
-              <p>$ {product.price.toFixed(2)}</p>
-              <QuantitySelector
-                quantity={product.quantity}
-                onQuantityChange={(quantity) =>
-                updateProductQuantity(product, quantity)
-                }
-              />
-              <button
-                className="underline mt-3"
-                onClick={() => removeProductFromCart(product)}
-              >
-                Remove
-              </button>
+              <p className="antialiased font-bold">{ currencyFormatter(product.price * product.quantity) }</p>
             </div>
           </div>
         ))}

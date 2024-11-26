@@ -2,6 +2,7 @@
 import { QuantitySelector, SizeSelector } from "@/components";
 import { CartProduct, Product, ValidSize } from "@/interfaces";
 import { useCartStore } from "@/store";
+import clsx from "clsx";
 import React, { useState } from "react";
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 }
 
 export const AddToCart = ({ product }: Props) => {
-  const addProductToCart = useCartStore(state => state.addProductToCart);
+  const addProductToCart = useCartStore((state) => state.addProductToCart);
 
   const [size, setSize] = useState<ValidSize>();
   const [quantity, setQuantity] = useState(1);
@@ -40,7 +41,7 @@ export const AddToCart = ({ product }: Props) => {
       quantity: quantity,
       size: size,
       image: product.images[0],
-    }
+    };
 
     addProductToCart(cartProduct);
     setSizeError(false);
@@ -55,20 +56,30 @@ export const AddToCart = ({ product }: Props) => {
           You must select a size!
         </span>
       )}
+      {product.inStock !== 0 && (
+        <>
+          <SizeSelector
+            selectedSize={size}
+            availableSizes={product.sizes}
+            onSizeChange={handleSizeChange}
+          />
 
-      <SizeSelector
-        selectedSize={size}
-        availableSizes={product.sizes}
-        onSizeChange={handleSizeChange}
-      />
+          <QuantitySelector
+            quantity={quantity}
+            onQuantityChange={handleQuantityChange}
+            customClass="mt-5 mb-2"
+          />
+        </>
+      )}
 
-      <QuantitySelector
-        quantity={quantity}
-        onQuantityChange={handleQuantityChange}
-        customClass="mt-5 mb-2"
-      />
-
-      <button className="btn-primary my-5" onClick={addToCart}>
+      <button
+        className={clsx("my-5", {
+          "btn-primary": product.inStock !== 0,
+          "btn-disabled": product.inStock === 0,
+        })}
+        onClick={addToCart}
+        disabled={product.inStock === 0}
+      >
         Add to cart
       </button>
     </>
