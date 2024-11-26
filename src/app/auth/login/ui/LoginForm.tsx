@@ -36,8 +36,7 @@ export const LoginForm = ({redirecTo}: Props) => {
       showToast(response.message, "error")
       return;
     }
-    
-
+  
   }
 
   return (
