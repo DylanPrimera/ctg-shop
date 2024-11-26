@@ -3,9 +3,10 @@ import { OrderProducts } from "./ui/OrderProducts";
 import { getOrderById } from "@/actions";
 import { Order } from "@/interfaces";
 import { OrderInformation } from "./ui/OrderInformation";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Metadata } from "next";
 import { PayedTag } from "./ui/PayedTag";
+import { auth } from "@/auth";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -22,7 +23,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function OrderPage({ params }: Props) {
   const { id } = await params;
+  const session = await auth();
   const { order, products } = await getOrderById(id);
+  if(!session?.user.id) {
+    redirect("/auth/login?redirectTo=/orders/" + id);
+  }
   if (!order) {
     notFound();
   }

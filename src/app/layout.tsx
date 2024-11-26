@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { inter } from "@/config/fonts";
-import { Provider } from "@/components";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Providers } from "@/components";
 
 export const metadata: Metadata = {
   title: {
@@ -23,7 +24,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} antialiased flex flex-col min-h-screen`}
       >
-        <Provider>{children}</Provider>
+        <Providers>{children}</Providers>
         <ToastContainer
           position="top-right"
           autoClose={3000}
