@@ -1,11 +1,10 @@
 "use client";
 import { RegisterUser, UserLogin } from "@/actions/auth/auth.actions";
 import { titleFont } from "@/config/fonts";
+import { useToastStore } from "@/store";
 import { sleep } from "@/utils";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 interface FormInputs {
   name: string;
@@ -13,15 +12,6 @@ interface FormInputs {
   password: string;
 }
 
-const notify = (success: boolean, message: string) => {
-  if (!success)
-    return toast.error(message, {
-      position: "top-right",
-    });
-  toast.success(message, {
-    position: "top-right",
-  });
-};
 
 export const RegisterForm = () => {
   const {
@@ -29,23 +19,23 @@ export const RegisterForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormInputs>();
+  const showToast = useToastStore((state) => state.showToast);
 
   const handleRegister = async (data: FormInputs) => {
     const { name, email, password } = data;
 
     const response = await RegisterUser(name, email, password);
     if (!response.ok) {
-      notify(response.ok, response.message);
+      showToast(response.message,'error');
       return;
     }
-    notify(response.ok, response.message);
+    showToast(response.message,'success');
     await sleep(2);
     await UserLogin(email.toLowerCase(), password);
   };
 
   return (
     <>
-      <ToastContainer />
       <div className="flex flex-col min-h-screen pt-32 sm:pt-52">
         <h1 className={`${titleFont.className} text-4xl mb-5`}>Register</h1>
 

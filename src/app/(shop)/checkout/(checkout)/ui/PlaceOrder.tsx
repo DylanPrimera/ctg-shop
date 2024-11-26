@@ -1,13 +1,11 @@
 "use client";
 import { placeOrder } from "@/actions";
 import { Skeleton } from "@/components";
-import { useAddressStore, useCartStore } from "@/store";
+import { useAddressStore, useCartStore, useToastStore } from "@/store";
 import { currencyFormatter, sleep } from "@/utils";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 export const PlaceOrder = () => {
   const [loaded, setLoaded] = useState(false);
@@ -16,6 +14,7 @@ export const PlaceOrder = () => {
 
   const address = useAddressStore((state) => state.address);
   const cart = useCartStore((state) => state.cartItems);
+  const showToast = useToastStore((state) => state.showToast);
   const { getSummaryInformation, clearCart } = useCartStore();
   const { subTotal, taxes, total, productsInCart } = getSummaryInformation();
 
@@ -35,16 +34,11 @@ export const PlaceOrder = () => {
     const orderResponse = await placeOrder(productsToOrder, address);
     if (!orderResponse?.ok) {
       setPlacingOrder(false);
-      toast.error(orderResponse?.message, {
-        position: "top-right",
-      });
+      showToast(orderResponse?.message,'error');
       return;
     }
 
- 
-    toast.success(orderResponse?.message, {
-      position: "top-right",
-    });
+    showToast(orderResponse?.message,'success');
     await sleep(3);
     setPlacingOrder(false);
 
@@ -62,7 +56,6 @@ export const PlaceOrder = () => {
   return (
     <>
       <div className="bg-white rounded-xl shadow-xl p-4 order-first md:order-last h-fit">
-        <ToastContainer />
         <h2 className="text-2xl mb-2 font-bold">Delivery address</h2>
         <div className="mb-6">
           <p className="text-xl">
