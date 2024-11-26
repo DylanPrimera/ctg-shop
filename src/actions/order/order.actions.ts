@@ -33,9 +33,6 @@ export const getOrders = async ({ page = 1, take = 10 }: Filters) => {
     if (session.user.role === "user") {
       whereClause.userId = session.user.id;
     }
-
-    console.log(whereClause);
-
     const orders = await prisma.order.findMany({
       take,
       skip: (page - 1) * take,

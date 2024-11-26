@@ -1,7 +1,10 @@
+
+export * from './paypal/PayPalButtton';
 export * from './product/slideshow/ProductMobileSlideShow'
 export * from './product/slideshow/ProductSlideShow'
 export * from './product/stock-label/StockLabel'
 export * from './providers/Providers'
+export * from './providers/Providers';
 export * from './ui/footer/Footer'
 export * from './ui/sidebar/SideBar';
 export * from './ui/skeleton/Skeleton'
@@ -14,4 +17,3 @@ export * from "./ui/pagination/Pagination";
 export * from "./ui/sidebar/SideMenu";
 export * from "./ui/title/Title";
 export * from "./ui/top-menu/TopMenu";
-export * from './providers/Providers';
