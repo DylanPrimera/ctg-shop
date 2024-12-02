@@ -18,10 +18,11 @@ export const getProducts = async ({ page = 1, take = 12, gender }: Filters) => {
       take,
       skip: (page - 1) * take,
       include: {
-        images: {
+        ProductImage: {
           take: 2,
           select: {
             url: true,
+            id: true,
           },
         },
       },
@@ -46,7 +47,7 @@ export const getProducts = async ({ page = 1, take = 12, gender }: Filters) => {
       totalPages,
       products: productsDB.map((product) => ({
         ...product,
-        images: product.images.map((image) => image.url),
+        images: product.ProductImage.map((image) => image.url),
       })),
     };
   } catch (error) {
@@ -62,9 +63,10 @@ export const getProductBySlug = async (slug: string) => {
         slug,
       },
       include: {
-        images: {
+        ProductImage: {
           select: {
             url: true,
+            id: true,
           },
         },
       },
@@ -74,7 +76,7 @@ export const getProductBySlug = async (slug: string) => {
 
     return {
       ...product,
-      images: product.images.map((image) => image.url),
+      images: product.ProductImage.map((image) => image.url),
     };
   } catch (error) {
     console.error(error);

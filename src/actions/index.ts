@@ -1,3 +1,4 @@
+
 export {
   authenticate,
   Logout,
@@ -27,3 +28,5 @@ export {
 export { checkPaypalPayment } from "./paypal/paypal.actions";
 
 export { getUsers, changeUserRole } from "./user/user.actions";
+
+export { getCategories } from './category/category.actions';

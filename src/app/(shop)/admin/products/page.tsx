@@ -15,13 +15,13 @@ export const metadata = {
 export default async function ProductsPage({ searchParams }: Props) {
   const { page } = await searchParams;
   const pageParam = page ? parseInt(page) : 1;
-  const { products, ok, totalPages } = await getProducts({ page: pageParam });
+  const { products, totalPages } = await getProducts({ page: pageParam });
   
   return (
     <>
       <Title title="Products" />
       <div className="flex justify-end mb-4">
-        <Link href="/admin/products" className="btn-primary">
+        <Link href="/admin/product/new" className="btn-primary">
           New product
         </Link>
       </div>

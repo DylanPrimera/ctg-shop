@@ -71,7 +71,7 @@ export const ProductsList = ({ products }: Props) => {
                 </Link>
               </td>
               <td className="text-sm text-gray-900 font-light px-6 py-4 ">
-                <Link href={`/admin/products/${product.slug}`} className="underline text-gray-600 antialiased">
+                <Link href={`/admin/product/${product.slug}`} className="hover:underline text-gray-600 antialiased">
                   {product.title}
                 </Link>
                 
