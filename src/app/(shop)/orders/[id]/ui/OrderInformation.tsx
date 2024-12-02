@@ -46,11 +46,13 @@ export const OrderInformation = ({ order }: Props) => {
             {currencyFormatter(order.total)}
           </span>
         </div>
-        {/* <PayedTag isPaid={order?.isPaid as boolean} /> */}
 
-        <div className="my-3">
-          <PayPalButtton amount={order.total} orderId={order.id} />
-        </div>
+        {order?.isPaid && <PayedTag isPaid={order?.isPaid as boolean} customClass="my-5" />}
+        {!order?.isPaid && (
+          <div className="my-3">
+            <PayPalButtton amount={order.total} orderId={order.id} />
+          </div>
+        )}
       </div>
     </>
   );
