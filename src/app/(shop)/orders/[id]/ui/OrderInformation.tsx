@@ -47,7 +47,7 @@ export const OrderInformation = ({ order }: Props) => {
           </span>
         </div>
 
-        {order?.isPaid && <PayedTag isPaid={order?.isPaid as boolean} customClass="my-5" />}
+        {order?.isPaid && <PayedTag isPaid={order.isPaid ?? false} customClass="my-5" />}
         {!order?.isPaid && (
           <div className="my-3">
             <PayPalButtton amount={order.total} orderId={order.id} />

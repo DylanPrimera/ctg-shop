@@ -38,7 +38,7 @@ export default async function OrderPage({ params }: Props) {
         <Title title={`Order #${id.split("-").at(-1)}`} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
           <div className="flex flex-col mt-5 order-last md:order-first">
-            <PayedTag isPaid={order?.isPaid as boolean} />
+            <PayedTag isPaid={order.isPaid ?? false} />
             {/* Cart Items*/}
             <OrderProducts products={products} />
           </div>

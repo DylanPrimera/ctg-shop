@@ -6,6 +6,8 @@ interface Props {
   customClass?: string;
 }
 
+// TODO this component should be on components/order folder
+
 export const PayedTag = ({ isPaid, customClass }: Props) => {
   return (
     <>
