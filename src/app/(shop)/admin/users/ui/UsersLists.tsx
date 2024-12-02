@@ -12,9 +12,10 @@ export const UsersList = ({ users }: Props) => {
   const showToast = useToastStore(state => state.showToast)
   
   const onChangeUserRole = async (id: string, role: Role) => {
-    const {ok} = await changeUserRole(id, role);
+    const {ok, message} = await changeUserRole(id, role);
     if(!ok) {
-      showToast('Unable to update user role', 'error');
+      showToast(message!, 'error');
+      return;
     }
     showToast('User role changed successfully', 'success');
   }
