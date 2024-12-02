@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import clsx from "clsx";
 import Link from "next/link";
 import { IoCardOutline } from "react-icons/io5";
@@ -56,43 +56,41 @@ export const OrdersList = ({ orders }: Props) => {
           </thead>
           <tbody>
             {orders?.map((order) => (
-              <>
-                <tr
-                  key={order.id}
-                  className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
-                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    {order.OrderAddress?.firstName}{" "}
-                    {order.OrderAddress?.lastName}
-                  </td>
-                  <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    {order.itemsInOrder}
-                  </td>
-                  <td className="flex items-center text-sm  text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                    <IoCardOutline
-                      className={clsx({
-                        "text-green-800": order.isPaid,
-                        "text-red-800": !order.isPaid,
-                      })}
-                    />
-                    <span
-                      className={clsx("mx-2", {
-                        "text-green-800": order.isPaid,
-                        "text-red-800": !order.isPaid,
-                      })}
-                    >
-                      {order.isPaid ? "Paid" : "Pending"}
-                    </span>
-                  </td>
-                  <td className="text-sm text-gray-900 font-light px-6 ">
-                    <Link
-                      href={`/orders/${order.id}`}
-                      className="hover:underline"
-                    >
-                      Show order
-                    </Link>
-                  </td>
-                </tr>
-              </>
+              <tr
+                key={order.id}
+                className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100"
+              >
+                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  {order.OrderAddress?.firstName} {order.OrderAddress?.lastName}
+                </td>
+                <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  {order.itemsInOrder}
+                </td>
+                <td className="flex items-center text-sm  text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                  <IoCardOutline
+                    className={clsx({
+                      "text-green-800": order.isPaid,
+                      "text-red-800": !order.isPaid,
+                    })}
+                  />
+                  <span
+                    className={clsx("mx-2", {
+                      "text-green-800": order.isPaid,
+                      "text-red-800": !order.isPaid,
+                    })}
+                  >
+                    {order.isPaid ? "Paid" : "Pending"}
+                  </span>
+                </td>
+                <td className="text-sm text-gray-900 font-light px-6 ">
+                  <Link
+                    href={`/orders/${order.id}`}
+                    className="hover:underline"
+                  >
+                    Show order
+                  </Link>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
