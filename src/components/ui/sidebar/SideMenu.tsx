@@ -34,19 +34,24 @@ const USER_OPTIONS = [
 
 const ADMIN_OPTIONS = [
   {
+    title: "Profile",
+    icon: <IoPersonOutline size={20} />,
+    href: "/profile",
+  },
+  {
     title: "Products",
     icon: <IoShirtOutline size={20} />,
-    href: "/",
+    href: "/admin/products",
   },
   {
     title: "Orders",
     icon: <IoTicketOutline size={20} />,
-    href: "/orders",
+    href: "/admin/orders",
   },
   {
     title: "Users",
     icon: <IoPeopleOutline size={20} />,
-    href: "/users",
+    href: "/admin/users",
   },
 ];
 
