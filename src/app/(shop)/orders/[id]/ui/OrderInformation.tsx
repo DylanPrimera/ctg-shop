@@ -1,7 +1,9 @@
+"use client";
 import { Order } from "@/interfaces";
 import { currencyFormatter } from "@/utils";
 import React from "react";
 import { PayedTag } from "./PayedTag";
+import { PayPalButtton } from "@/components";
 
 interface Props {
   order: Order;
@@ -9,6 +11,7 @@ interface Props {
 
 export const OrderInformation = ({ order }: Props) => {
   const { OrderAddress: address } = order;
+
   return (
     <>
       <div className="bg-white rounded-xl shadow-xl p-4 order-first md:order-last h-fit">
@@ -35,9 +38,7 @@ export const OrderInformation = ({ order }: Props) => {
               : `${order.itemsInOrder} products`}
           </span>
           <span>Subtotal</span>
-          <span className="text-end">
-            {currencyFormatter(order.subTotal)}
-          </span>
+          <span className="text-end">{currencyFormatter(order.subTotal)}</span>
           <span>Taxes (15%)</span>
           <span className="text-end">{currencyFormatter(order.taxes)}</span>
           <span className="mt-5 text-2xl">Total:</span>
@@ -45,7 +46,13 @@ export const OrderInformation = ({ order }: Props) => {
             {currencyFormatter(order.total)}
           </span>
         </div>
-        <PayedTag isPaid={order?.isPaid as boolean} />
+
+        {order?.isPaid && <PayedTag isPaid={order.isPaid ?? false} customClass="my-5" />}
+        {!order?.isPaid && (
+          <div className="my-3">
+            <PayPalButtton amount={order.total} orderId={order.id} />
+          </div>
+        )}
       </div>
     </>
   );

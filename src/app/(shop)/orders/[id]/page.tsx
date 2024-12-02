@@ -3,9 +3,10 @@ import { OrderProducts } from "./ui/OrderProducts";
 import { getOrderById } from "@/actions";
 import { Order } from "@/interfaces";
 import { OrderInformation } from "./ui/OrderInformation";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Metadata } from "next";
 import { PayedTag } from "./ui/PayedTag";
+import { auth } from "@/auth";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -22,7 +23,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function OrderPage({ params }: Props) {
   const { id } = await params;
+  const session = await auth();
   const { order, products } = await getOrderById(id);
+  if(!session?.user.id) {
+    redirect("/auth/login?redirectTo=/orders/" + id);
+  }
   if (!order) {
     notFound();
   }
@@ -33,7 +38,7 @@ export default async function OrderPage({ params }: Props) {
         <Title title={`Order #${id.split("-").at(-1)}`} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
           <div className="flex flex-col mt-5 order-last md:order-first">
-            <PayedTag isPaid={order?.isPaid as boolean} />
+            <PayedTag isPaid={order.isPaid ?? false} />
             {/* Cart Items*/}
             <OrderProducts products={products} />
           </div>

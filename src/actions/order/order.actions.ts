@@ -20,7 +20,6 @@ export const getOrders = async ({ page = 1, take = 10 }: Filters) => {
   if (isNaN(Number(page)) || page < 1) page = 1;
   try {
     const session = await auth();
-    let orders;
     let totalPages = 0;
 
     if (!session?.user.id) {
@@ -29,53 +28,28 @@ export const getOrders = async ({ page = 1, take = 10 }: Filters) => {
         message: "No user session",
       };
     }
-    if (session?.user.role === "user") {
-      orders = await prisma.order.findMany({
-        take,
-        skip: (page - 1) * take,
-        where: {
-          userId: session?.user.id,
-        },
-        orderBy:{
-          isPaid: "asc"
-        },
-        include: {
-          OrderAddress: {
-            select: {
-              firstName: true,
-              lastName: true,
-            },
-          },
-        },
-      });
-      totalPages = Math.ceil(
-        (await prisma.order.count({
-          where: {
-            userId: session?.user.id,
-          },
-        })) / take
-      );
-    } else {
-      orders = await prisma.order.findMany({
-        take,
-        skip: (page - 1) * take,
-        orderBy:{
-          isPaid: "asc"
-        },
-        include: {
-          OrderAddress: {
-            select: {
-              firstName: true,
-              lastName: true,
-            },
-          },
-        },
-      });
-      totalPages = Math.ceil(
-        (await prisma.order.count()) / take
-      );
-    }
+    const whereClause: { userId?: string } = {};
 
+    if (session.user.role === "user") {
+      whereClause.userId = session.user.id;
+    }
+    const orders = await prisma.order.findMany({
+      take,
+      skip: (page - 1) * take,
+      where: whereClause,
+      orderBy: {
+        isPaid: "asc",
+      },
+      include: {
+        OrderAddress: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+    totalPages = Math.ceil((await prisma.order.count()) / take);
     return {
       ok: true,
       orders: orders,
@@ -187,7 +161,7 @@ export const placeOrder = async (
                 }),
               },
             },
-            isPaid: true,
+            isPaid: false,
           },
         });
 
@@ -234,8 +208,14 @@ export const getOrderById = async (orderId: string) => {
     const session = await auth();
     if (!session?.user.id) return { ok: false, error: "No user session" };
 
+    const whereClause: { id: string; userId?: string } = { id: orderId };
+
+    if (session.user.role === "user") {
+      whereClause.userId = session.user.id;
+    }
+
     const orderDB = await prisma.order.findUnique({
-      where: { id: orderId, userId: session.user.id },
+      where: whereClause,
       include: {
         OrderAddress: true,
         orderItem: {
@@ -259,7 +239,6 @@ export const getOrderById = async (orderId: string) => {
         },
       },
     });
-
     if (session.user.role === "user") {
       if (session.user.id !== orderDB?.userId) {
         throw new Error("Order not belongs to the current user");
@@ -279,3 +258,37 @@ export const getOrderById = async (orderId: string) => {
     };
   }
 };
+
+export const setTransactionId = async (
+  orderId: string,
+  transactionId: string
+) => {
+  try {
+    const orderDB = await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        transactionId: transactionId,
+      },
+    });
+    if (!orderDB) {
+      return {
+        ok: false,
+        message: "Order not found",
+      };
+    }
+    return {
+      ok: true,
+      order: orderDB,
+      message: "Place order successfully",
+    };
+  } catch (error: any) {
+    console.error(error);
+    return {
+      ok: false,
+      message: 'Error trying to pay order',
+    };
+  }
+};
+

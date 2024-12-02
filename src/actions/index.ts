@@ -17,4 +17,6 @@ export {
   getStockBySlug,
 } from "./products/products.actions";
 
-export { getOrders, placeOrder, getOrderById } from "./order/order.actions";
+export { getOrders, placeOrder, getOrderById, setTransactionId } from "./order/order.actions";
+
+export {checkPaypalPayment} from './paypal/paypal.actions';

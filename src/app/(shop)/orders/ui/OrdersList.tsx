@@ -59,8 +59,7 @@ export const OrdersList = ({ orders }: Props) => {
               <>
                 <tr
                   key={order.id}
-                  className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100"
-                >
+                  className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
                   <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                     {order.OrderAddress?.firstName}{" "}
                     {order.OrderAddress?.lastName}
