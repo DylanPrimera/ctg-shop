@@ -41,6 +41,7 @@ export const getProducts = async ({ page = 1, take = 12, gender }: Filters) => {
 
     await Promise.all([productsDB, totalPages]);
     return {
+      ok: true,
       currentPage: page,
       totalPages,
       products: productsDB.map((product) => ({
