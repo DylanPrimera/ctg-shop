@@ -1,7 +1,9 @@
 "use client";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
-import { CreateOrderData, CreateOrderActions } from "@paypal/paypal-js";
+import { CreateOrderData, CreateOrderActions, OnApproveData, OnApproveActions } from "@paypal/paypal-js";
 import { Skeleton } from "../ui/skeleton/Skeleton";
+import { checkPaypalPayment, setTransactionId } from "@/actions";
+import { useToastStore } from "@/store";
 
 interface Props {
   orderId: string;
@@ -10,6 +12,7 @@ interface Props {
 
 export const PayPalButtton = ({ orderId, amount }: Props) => {
   const [{ isPending }] = usePayPalScriptReducer();
+  const showToast = useToastStore((state) => state.showToast);
   const roundedAmount = amount.toFixed(2).toString();
   if (isPending)
     return (
@@ -38,10 +41,26 @@ export const PayPalButtton = ({ orderId, amount }: Props) => {
         },
       ],
     });
-    console.log(transactionId);
-
+    const { ok, message, order } = await setTransactionId(
+      orderId,
+      transactionId
+    );
+    if (!ok) {
+      showToast(message, "error");
+    }
+    showToast(message, "success");
     return transactionId;
   };
 
-  return <PayPalButtons createOrder={createOrder} />;
+  const onApprove = async (
+    data: OnApproveData,
+    actions: OnApproveActions
+  ): Promise<void> => {
+    const details = await actions.order?.capture();
+    if(!details) return;
+
+    await checkPaypalPayment(details.id as string);
+  };
+
+  return <PayPalButtons createOrder={createOrder} onApprove={onApprove} />;
 };

@@ -258,3 +258,37 @@ export const getOrderById = async (orderId: string) => {
     };
   }
 };
+
+export const setTransactionId = async (
+  orderId: string,
+  transactionId: string
+) => {
+  try {
+    const orderDB = await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        transactionId: transactionId,
+      },
+    });
+    if (!orderDB) {
+      return {
+        ok: false,
+        message: "Order not found",
+      };
+    }
+    return {
+      ok: true,
+      order: orderDB,
+      message: "Place order successfully",
+    };
+  } catch (error: any) {
+    console.error(error);
+    return {
+      ok: false,
+      message: 'Error trying to pay order',
+    };
+  }
+};
+
