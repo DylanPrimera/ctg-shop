@@ -1,6 +1,8 @@
 "use server";
 
 import { PaypalOrderStatusResponse } from "@/interfaces";
+import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export const checkPaypalPayment = async (paypalTransactionId: string) => {
   try {
@@ -12,7 +14,45 @@ export const checkPaypalPayment = async (paypalTransactionId: string) => {
         message: "Unable to get auht token",
       };
     }
-    await verifyPaypalPayment(paypalTransactionId, authToken);
+    const resp = await verifyPaypalPayment(paypalTransactionId, authToken);
+    if (!resp) {
+      return {
+        ok: false,
+        message: "Error verifying payment",
+      };
+    }
+
+    const { status, purchase_units } = resp;
+    const { invoice_id: orderId } = purchase_units[0];
+    if (status !== "COMPLETED") {
+      return {
+        ok: false,
+        message: "Payment not completed",
+      };
+    }
+    try {
+    await prisma.order.update({
+        where: {
+          id: orderId,
+        },
+        data: {
+          isPaid: true,
+          paidAt: new Date(),
+        },
+      });
+
+      revalidatePath(`/orders/${orderId}`);
+      return {
+        ok: true,
+        message: "Payment completed",
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        ok: false,
+        message: "Error trying to update the payment",
+      };
+    }
   } catch (error) {
     console.log(error);
     return null;
@@ -39,10 +79,10 @@ const getPaypalBearerToken = async (): Promise<string | null> => {
   };
 
   try {
-    const result = await fetch(
-      `${process.env.PAYPAL_OAUTH_URL}`,
-      requestOptions
-    ).then((r) => r.json());
+    const result = await fetch(`${process.env.PAYPAL_OAUTH_URL}`, {
+      ...requestOptions,
+      cache: "no-store",
+    }).then((r) => r.json());
     return result.access_token;
   } catch (error) {
     console.log(error);
@@ -53,7 +93,7 @@ const getPaypalBearerToken = async (): Promise<string | null> => {
 const verifyPaypalPayment = async (
   transactionId: string,
   authToken: string
-): Promise<PaypalOrderStatusResponse> => {
+): Promise<PaypalOrderStatusResponse | undefined> => {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", `Bearer ${authToken}`);
 
@@ -65,9 +105,12 @@ const verifyPaypalPayment = async (
   try {
     const response = await fetch(
       `${process.env.PAYPAL_ORDERS_URL}/${transactionId}`,
-      requestOptions
+      {
+        ...requestOptions,
+        cache: "no-store",
+      }
     ).then((r) => r.json());
-    console.log({ response });
+    return response;
   } catch (error) {
     console.log(error);
   }

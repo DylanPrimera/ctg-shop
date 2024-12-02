@@ -1,6 +1,11 @@
 "use client";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
-import { CreateOrderData, CreateOrderActions, OnApproveData, OnApproveActions } from "@paypal/paypal-js";
+import {
+  CreateOrderData,
+  CreateOrderActions,
+  OnApproveData,
+  OnApproveActions,
+} from "@paypal/paypal-js";
 import { Skeleton } from "../ui/skeleton/Skeleton";
 import { checkPaypalPayment, setTransactionId } from "@/actions";
 import { useToastStore } from "@/store";
@@ -33,7 +38,7 @@ export const PayPalButtton = ({ orderId, amount }: Props) => {
       intent: "CAPTURE",
       purchase_units: [
         {
-          // invoice_id: new Date().toISOString(),
+          invoice_id: orderId,
           amount: {
             value: roundedAmount,
             currency_code: "USD",
@@ -41,7 +46,7 @@ export const PayPalButtton = ({ orderId, amount }: Props) => {
         },
       ],
     });
-    const { ok, message, order } = await setTransactionId(
+    const { ok, message } = await setTransactionId(
       orderId,
       transactionId
     );
@@ -57,9 +62,14 @@ export const PayPalButtton = ({ orderId, amount }: Props) => {
     actions: OnApproveActions
   ): Promise<void> => {
     const details = await actions.order?.capture();
-    if(!details) return;
+    if (!details) return;
 
-    await checkPaypalPayment(details.id as string);
+    const resp = await checkPaypalPayment(details.id as string);
+    if (!resp?.ok) {
+      return showToast(resp?.message ?? "", "error");
+    }
+
+    showToast(resp.message, "success");
   };
 
   return <PayPalButtons createOrder={createOrder} onApprove={onApprove} />;

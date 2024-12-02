@@ -161,7 +161,7 @@ export const placeOrder = async (
                 }),
               },
             },
-            isPaid: true,
+            isPaid: false,
           },
         });
 
