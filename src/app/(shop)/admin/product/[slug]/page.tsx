@@ -13,16 +13,15 @@ export default async function ProductPage({ params }: Props) {
     getProductBySlug(slug),
     getCategories(),
   ]);
-  const title = slug === "new" ? "Nuevo producto" : "Editar producto";
+  const title = slug === "new" ? "New Product" : "Edit Product";
   if (!product && slug !== "new") {
     redirect("/admin/products");
   }
 
-  console.log(product)
   return (
     <>
       <Title title={title} />
-      <ProductForm product={product!} categories={categories ?? []} />
+      <ProductForm product={product ?? {}} categories={categories ?? []} />
     </>
   );
 }

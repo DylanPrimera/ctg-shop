@@ -1,11 +1,13 @@
 "use client";
 
+import { createOrUpdateProduct } from "@/actions";
 import { Product, ProductImage, ValidSize } from "@/interfaces";
+import clsx from "clsx";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
 interface Props {
-  product: Product & { ProductImage?: ProductImage[] };
+  product: Partial<Product & { ProductImage?: ProductImage[] }>;
   categories: { id: string; name: string }[];
 }
 
@@ -26,16 +28,50 @@ interface FormInputs {
 }
 
 export const ProductForm = ({ product, categories }: Props) => {
-  const { handleSubmit, register, formState } = useForm<FormInputs>({
-    defaultValues: {
-      ...product,
-      tags: product.tags.join(", "),
-      sizes: product.sizes ?? [],
-    },
-  });
-  console.log({ formState });
+  const { handleSubmit, register, formState, getValues, setValue, watch } =
+    useForm<FormInputs>({
+      defaultValues: {
+        ...product,
+        tags: product.tags?.join(", "),
+        sizes: product.sizes ?? [],
+      },
+    });
+
+  watch("sizes"); // tells the form to re render by a field
+
   const onSubmit = async (data: FormInputs) => {
-    console.log(data);
+    const formData = new FormData();
+    const { ...productToSave } = data;
+    if(product.id) {
+      formData.append("id", product.id ?? "");
+    }
+    
+    formData.append("title", productToSave.title);
+    formData.append("slug", productToSave.slug);
+    formData.append("description", productToSave.description ?? "");
+    formData.append("price", productToSave.price.toString());
+    formData.append("inStock", productToSave.inStock.toString());
+    formData.append("sizes", productToSave.sizes.toString());
+    formData.append("tags", productToSave.tags);
+    formData.append("gender", productToSave.gender);
+    formData.append("categoryId", productToSave.categoryId);
+    await createOrUpdateProduct(formData);
+  };
+
+  const onSizeChanged = (size: string) => {
+    const sizes = getValues("sizes");
+    const sizeIndex = sizes.findIndex((s) => s === size);
+    if (sizeIndex !== -1) {
+      setValue(
+        "sizes",
+        sizes.filter((s) => s !== size)
+      );
+    } else {
+      setValue("sizes", [...sizes, size]);
+    }
+  };
+  const handleDeleteProductImage = (id: number) => {
+    console.log(id);
   };
   return (
     <form
@@ -47,6 +83,7 @@ export const ProductForm = ({ product, categories }: Props) => {
           <span>Title</span>
           <input
             type="text"
+            placeholder="Product title"
             className="p-2 border rounded-md bg-gray-200 outline-none"
             {...register("title", { required: true })}
           />
@@ -56,6 +93,7 @@ export const ProductForm = ({ product, categories }: Props) => {
           <span>Slug</span>
           <input
             type="text"
+            placeholder="Product slug"
             className="p-2 border rounded-md bg-gray-200 outline-none"
             {...register("slug", { required: true })}
           />
@@ -64,6 +102,7 @@ export const ProductForm = ({ product, categories }: Props) => {
         <div className="flex flex-col mb-2">
           <span>Description</span>
           <textarea
+            placeholder="Product description"
             rows={5}
             className="p-2 border rounded-md bg-gray-200 outline-none resize-none"
             {...register("description", { required: true, minLength: 10 })}
@@ -74,6 +113,7 @@ export const ProductForm = ({ product, categories }: Props) => {
           <span>Price</span>
           <input
             type="number"
+            placeholder="0.00"
             className="p-2 border rounded-md bg-gray-200 outline-none"
             {...register("price", { required: true, min: 0 })}
           />
@@ -83,6 +123,7 @@ export const ProductForm = ({ product, categories }: Props) => {
           <span>Tags</span>
           <input
             type="text"
+            placeholder="example,example,example"
             className="p-2 border rounded-md bg-gray-200 outline-none"
             {...register("tags", { required: true })}
           />
@@ -120,17 +161,32 @@ export const ProductForm = ({ product, categories }: Props) => {
         <button className="btn-primary w-full">Save</button>
       </div>
 
-      {/* Selector de tallas y fotos */}
+      {/* Select sizes and images */}
       <div className="w-full">
+        <div className="flex flex-col mb-2">
+          <span>Stock</span>
+          <input
+            type="number"
+            placeholder="0"
+            className="p-2 border rounded-md bg-gray-200 outline-none"
+            {...register("inStock", { required: true, min: 0 })}
+          />
+        </div>
         {/* As checkboxes */}
         <div className="flex flex-col">
           <span>Sizes</span>
           <div className="flex flex-wrap">
             {sizes.map((size) => (
-              // bg-blue-500 text-white <--- si está seleccionado
               <div
                 key={size}
-                className="flex  items-center justify-center w-10 h-10 mr-2 border rounded-md"
+                onClick={() => onSizeChanged(size)}
+                className={clsx(
+                  "p-1 border cursor-pointer rounded-md mr-2 mb-2 w-10 transition-all text-center",
+                  {
+                    "bg-blue-500 text-white border-blue-500":
+                      getValues("sizes").includes(size),
+                  }
+                )}
               >
                 <span>{size}</span>
               </div>
@@ -151,12 +207,18 @@ export const ProductForm = ({ product, categories }: Props) => {
               <div key={image.id}>
                 <Image
                   src={`/products/${image.url}`}
-                  alt={product.title}
+                  alt={product.title!}
                   width={300}
                   height={300}
-                  className="rounded shadow-md"
+                  className="rounded-t shadow-md"
                 />
-                <button className="btn-danger w-full">Delete</button>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteProductImage(image.id)}
+                  className="btn-danger w-full rounded-b-xl"
+                >
+                  Delete
+                </button>
               </div>
             ))}
           </div>

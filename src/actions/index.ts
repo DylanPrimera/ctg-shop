@@ -16,6 +16,7 @@ export {
   getProducts,
   getProductBySlug,
   getStockBySlug,
+  createOrUpdateProduct
 } from "./products/products.actions";
 
 export {

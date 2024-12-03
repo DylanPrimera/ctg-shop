@@ -1,14 +1,34 @@
-'use server'
-
+"use server";
 
 import prisma from "@/lib/prisma";
-import { Gender } from "@prisma/client";
+import { Gender, Product, Size } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 interface Filters {
   page?: number;
   take?: number;
   gender?: Gender;
 }
+
+const productSchema = z.object({
+  id: z.string().uuid().optional().nullable(),
+  title: z.string().min(3).max(255),
+  slug: z.string().min(3).max(100),
+  description: z.string().min(3).max(500),
+  price: z.coerce
+    .number()
+    .min(0)
+    .transform((val) => Number(val.toFixed(2))),
+  inStock: z.coerce
+    .number()
+    .min(0)
+    .transform((val) => Number(val)),
+  sizes: z.coerce.string().transform((val) => val.split(",")),
+  tags: z.string(),
+  gender: z.nativeEnum(Gender),
+  categoryId: z.string().uuid(),
+});
 
 export const getProducts = async ({ page = 1, take = 12, gender }: Filters) => {
   if (isNaN(Number(page)) || page < 1) page = 1;
@@ -63,12 +83,7 @@ export const getProductBySlug = async (slug: string) => {
         slug,
       },
       include: {
-        ProductImage: {
-          select: {
-            url: true,
-            id: true,
-          },
-        },
+        ProductImage:true
       },
     });
 
@@ -94,10 +109,66 @@ export const getStockBySlug = async (slug: string) => {
         inStock: true,
       },
     });
-    
+
     return product?.inStock ?? 0;
   } catch (error) {
     console.error(error);
     return 0;
+  }
+};
+
+export const createOrUpdateProduct = async (formData: FormData) => {
+  const data = Object.fromEntries(formData.entries());
+  const parsedProduct = productSchema.safeParse(data);
+  if (!parsedProduct.success) {
+    return { ok: false, message: parsedProduct.error };
+  }
+  const product = parsedProduct.data;
+  product.slug = product.slug.toLowerCase().replace(/ /g, "_").trim();
+
+  const { id, ...rest } = product;
+  console.log(rest);
+  // transaction
+  const prismaTx = await prisma.$transaction(async (tx) => {
+    let productDB: Product;
+    const tagsArray = rest.tags
+      .split(",")
+      .map((tag) => tag.trim().toLowerCase());
+    if (id) {
+      productDB = await prisma.product.update({
+        where: {
+          id,
+        },
+        data: {
+          ...rest,
+          sizes: {
+            set: rest.sizes as Size[],
+          },
+          tags: {
+            set: tagsArray,
+          },
+        },
+      });
+    } else {
+      productDB = await prisma.product.create({
+        data: {
+          ...rest,
+          sizes: {
+            set: rest.sizes as Size[],
+          },
+          tags: {
+            set: tagsArray,
+          },
+        },
+      });
+    }
+
+    return {
+      productDB,
+    };
+  });
+
+  return {
+    ok: true,
   }
 };
