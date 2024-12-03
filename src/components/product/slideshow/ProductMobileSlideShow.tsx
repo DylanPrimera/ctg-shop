@@ -1,11 +1,12 @@
 "use client";
-import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import "./slideshow.css";
+import { ProductImage } from "@/components";
+
 
 interface Props {
   images: string[];
@@ -13,7 +14,12 @@ interface Props {
   customClass?: string;
 }
 
-export const ProductMobileSlideShow = ({ images, title, customClass }: Props) => {
+export const ProductMobileSlideShow = ({
+  images,
+  title,
+  customClass,
+}: Props) => {
+
   return (
     <div className={customClass}>
       <Swiper
@@ -22,15 +28,15 @@ export const ProductMobileSlideShow = ({ images, title, customClass }: Props) =>
           height: "100%",
         }}
         pagination
-        modules={[FreeMode,Autoplay, Pagination]}
+        modules={[FreeMode, Autoplay, Pagination]}
         className="mySwiper2"
         autoplay={{ delay: 3000 }}
       >
         {images.map((image) => (
           <SwiperSlide key={image}>
-            <Image
+            <ProductImage
               className="object-fill"
-              src={`/products/${image}`}
+              src={image}
               alt={title}
               width={600}
               height={500}

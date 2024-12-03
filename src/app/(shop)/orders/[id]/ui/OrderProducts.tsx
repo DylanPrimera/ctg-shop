@@ -1,6 +1,6 @@
+import { ProductImage } from "@/components";
 import { OrderItem } from "@/interfaces";
 import { currencyFormatter } from "@/utils";
-import Image from "next/image";
 
 interface Props {
   products: OrderItem[];
@@ -13,8 +13,8 @@ export const OrderProducts = ({ products }: Props) => {
           key={`${item.product.slug}-${item.size}`}
           className="flex items-center mb-5"
         >
-          <Image
-            src={`/products/${item.product.images[0].url}`}
+          <ProductImage
+            src={item.product.images[0].url}
             alt={item.product.title}
             className="mr-5 rounded"
             width={100}

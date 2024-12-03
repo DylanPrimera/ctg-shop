@@ -1,8 +1,8 @@
 "use client";
 
+import { ProductImage } from "@/components";
 import { Product } from "@/interfaces";
 import { currencyFormatter } from "@/utils";
-import Image from "next/image";
 import Link from "next/link";
 
 interface Props {
@@ -61,8 +61,8 @@ export const ProductsList = ({ products }: Props) => {
             >
               <td className="text-sm text-gray-900 font-light px-6 py-4 ">
                 <Link href={`/product/${product.slug}`}>
-                  <Image
-                    src={`/products/${product.images[0]}`}
+                  <ProductImage
+                    src={product.images[0]??''}
                     alt={product.title}
                     width={80}
                     height={80}
@@ -71,10 +71,12 @@ export const ProductsList = ({ products }: Props) => {
                 </Link>
               </td>
               <td className="text-sm text-gray-900 font-light px-6 py-4 ">
-                <Link href={`/admin/product/${product.slug}`} className="hover:underline text-gray-600 antialiased">
+                <Link
+                  href={`/admin/product/${product.slug}`}
+                  className="hover:underline text-gray-600 antialiased"
+                >
                   {product.title}
                 </Link>
-                
               </td>
               <td className="text-sm text-gray-900 font-semibold px-6 py-4 ">
                 {currencyFormatter(product.price)}

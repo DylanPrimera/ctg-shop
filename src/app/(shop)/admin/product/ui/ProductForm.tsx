@@ -1,9 +1,9 @@
 "use client";
 
 import { createOrUpdateProduct } from "@/actions";
+import { ProductImage as ImageCustom } from "@/components";
 import { Product, ProductImage, ValidSize } from "@/interfaces";
 import clsx from "clsx";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 
 interface Props {
@@ -205,8 +205,8 @@ export const ProductForm = ({ product, categories }: Props) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {product?.ProductImage?.map((image) => (
               <div key={image.id}>
-                <Image
-                  src={`/products/${image.url}`}
+                <ImageCustom
+                  src={image.url}
                   alt={product.title!}
                   width={300}
                   height={300}

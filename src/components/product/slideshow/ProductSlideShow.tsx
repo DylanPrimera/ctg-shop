@@ -4,14 +4,13 @@ import React, { useState } from "react";
 import { Swiper as SwiperObject } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs, Autoplay } from "swiper/modules";
-import Image from "next/image";
-
 
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "./slideshow.css";
+import { ProductImage } from "../product-image/ProductImage";
 
 interface Props {
   images: string[];
@@ -34,9 +33,9 @@ export const ProductSlideShow = ({ images, title, customClass }: Props) => {
       >
         {images.map((image) => (
           <SwiperSlide key={image}>
-            <Image
+            <ProductImage
               className="object-fill rounded-lg"
-              src={`/products/${image}`}
+              src={image}
               alt={title}
               width={1024}
               height={800}
@@ -55,9 +54,9 @@ export const ProductSlideShow = ({ images, title, customClass }: Props) => {
       >
         {images.map((image) => (
           <SwiperSlide key={image}>
-            <Image
+            <ProductImage
               className="w-full h-full object-fill rounded-lg cursor-pointer"
-              src={`/products/${image}`}
+              src={image}
               alt={title}
               width={300}
               height={300}
