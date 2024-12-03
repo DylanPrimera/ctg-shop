@@ -83,7 +83,7 @@ export const getProductBySlug = async (slug: string) => {
         slug,
       },
       include: {
-        ProductImage:true
+        ProductImage: true,
       },
     });
 
@@ -121,54 +121,78 @@ export const createOrUpdateProduct = async (formData: FormData) => {
   const data = Object.fromEntries(formData.entries());
   const parsedProduct = productSchema.safeParse(data);
   if (!parsedProduct.success) {
-    return { ok: false, message: parsedProduct.error };
+    return { ok: false, message: parsedProduct.error.message };
   }
   const product = parsedProduct.data;
   product.slug = product.slug.toLowerCase().replace(/ /g, "_").trim();
 
   const { id, ...rest } = product;
-  console.log(rest);
   // transaction
-  const prismaTx = await prisma.$transaction(async (tx) => {
-    let productDB: Product;
-    const tagsArray = rest.tags
-      .split(",")
-      .map((tag) => tag.trim().toLowerCase());
-    if (id) {
-      productDB = await prisma.product.update({
-        where: {
-          id,
-        },
-        data: {
-          ...rest,
-          sizes: {
-            set: rest.sizes as Size[],
+  try {
+    const prismaTx = await prisma.$transaction(async (tx) => {
+      let productDB: Product;
+      const tagsArray = rest.tags
+        .split(",")
+        .map((tag) => tag.trim().toLowerCase());
+      if (id) {
+        productDB = await tx.product.update({
+          where: {
+            id,
           },
-          tags: {
-            set: tagsArray,
+          data: {
+            ...rest,
+            sizes: {
+              set: rest.sizes as Size[],
+            },
+            tags: {
+              set: tagsArray,
+            },
           },
-        },
-      });
-    } else {
-      productDB = await prisma.product.create({
-        data: {
-          ...rest,
-          sizes: {
-            set: rest.sizes as Size[],
+        });
+        if (!productDB) {
+          return {
+            ok: false,
+            message: "Cannot update the product",
+            productDB,
+          };
+        }
+      } else {
+        productDB = await prisma.product.create({
+          data: {
+            ...rest,
+            sizes: {
+              set: rest.sizes as Size[],
+            },
+            tags: {
+              set: tagsArray,
+            },
           },
-          tags: {
-            set: tagsArray,
-          },
-        },
-      });
-    }
+        });
+      }
 
+      return {
+        ok: true,
+        productDB,
+        message: "Product information saved successfully",
+      };
+    });
+
+    //revalidate paths
+    revalidatePath("/admin/products");
+    revalidatePath("/admin/product/" + prismaTx.productDB.slug);
+    revalidatePath("/products/" + prismaTx.productDB.slug);
+    
+    
     return {
-      productDB,
+      ok: prismaTx.ok,
+      productDB: prismaTx.productDB,
+      message: prismaTx.message,
     };
-  });
-
-  return {
-    ok: true,
+  } catch (error) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "Error creating or updating product",
+    };
   }
 };

@@ -3,7 +3,10 @@
 import { createOrUpdateProduct } from "@/actions";
 import { ProductImage as ImageCustom } from "@/components";
 import { Product, ProductImage, ValidSize } from "@/interfaces";
+import { useToastStore } from "@/store";
+import { sleep } from "@/utils";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 interface Props {
@@ -28,7 +31,7 @@ interface FormInputs {
 }
 
 export const ProductForm = ({ product, categories }: Props) => {
-  const { handleSubmit, register, formState, getValues, setValue, watch } =
+  const { handleSubmit, register, formState, getValues, setValue, watch,  } =
     useForm<FormInputs>({
       defaultValues: {
         ...product,
@@ -36,9 +39,10 @@ export const ProductForm = ({ product, categories }: Props) => {
         sizes: product.sizes ?? [],
       },
     });
+  const router = useRouter();
+  const showToast = useToastStore(state=> state.showToast);
 
   watch("sizes"); // tells the form to re render by a field
-
   const onSubmit = async (data: FormInputs) => {
     const formData = new FormData();
     const { ...productToSave } = data;
@@ -55,7 +59,13 @@ export const ProductForm = ({ product, categories }: Props) => {
     formData.append("tags", productToSave.tags);
     formData.append("gender", productToSave.gender);
     formData.append("categoryId", productToSave.categoryId);
-    await createOrUpdateProduct(formData);
+    const {ok, message, productDB } = await createOrUpdateProduct(formData);
+    if(!ok) {
+      showToast(message, 'error');
+      return;
+    }
+    showToast(message, 'success');
+    router.replace(`/admin/product/${productDB?.slug}`)
   };
 
   const onSizeChanged = (size: string) => {
