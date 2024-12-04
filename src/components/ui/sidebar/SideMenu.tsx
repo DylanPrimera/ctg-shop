@@ -92,7 +92,7 @@ export const SideMenu = ({ isAuthenticated = false, isAdmin }: Props) => {
         >
           <IoCloseOutline
             size={45}
-            className="absolute top-5 right-5 cursor-pointer"
+            className="absolute top-5 right-5 cursor-pointer mb-5"
             onClick={closeSideMenu}
           />
 
