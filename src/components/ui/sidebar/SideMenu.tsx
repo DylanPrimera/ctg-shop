@@ -4,7 +4,6 @@ import {
   IoLogInOutline,
   IoLogOutOutline,
   IoPeopleOutline,
-  IoPersonOutline,
   IoSearchOutline,
   IoShirtOutline,
   IoTicketOutline,
