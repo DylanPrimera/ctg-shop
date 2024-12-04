@@ -20,11 +20,11 @@ interface Props {
 }
 
 const USER_OPTIONS = [
-  {
-    title: "Profile",
-    icon: <IoPersonOutline size={20} />,
-    href: "/profile",
-  },
+  // {
+  //   title: "Profile",
+  //   icon: <IoPersonOutline size={20} />,
+  //   href: "/profile",
+  // },
   {
     title: "Orders",
     icon: <IoTicketOutline size={20} />,
@@ -33,11 +33,11 @@ const USER_OPTIONS = [
 ];
 
 const ADMIN_OPTIONS = [
-  {
-    title: "Profile",
-    icon: <IoPersonOutline size={20} />,
-    href: "/profile",
-  },
+  // {
+  //   title: "Profile",
+  //   icon: <IoPersonOutline size={20} />,
+  //   href: "/profile",
+  // },
   {
     title: "Products",
     icon: <IoShirtOutline size={20} />,
