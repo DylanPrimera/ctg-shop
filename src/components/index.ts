@@ -1,5 +1,6 @@
 
 export * from './paypal/PayPalButtton';
+export * from './product/product-image/ProductImage';
 export * from './product/slideshow/ProductMobileSlideShow'
 export * from './product/slideshow/ProductSlideShow'
 export * from './product/stock-label/StockLabel'

@@ -1,16 +1,26 @@
 "use client";
 import { Order } from "@/interfaces";
 import { currencyFormatter } from "@/utils";
-import React from "react";
+import React, { useEffect } from "react";
 import { PayedTag } from "./PayedTag";
 import { PayPalButtton } from "@/components";
+import { useCartStore } from "@/store";
+import { useSession } from "next-auth/react";
 
 interface Props {
   order: Order;
 }
 
 export const OrderInformation = ({ order }: Props) => {
+  const session = useSession();
   const { OrderAddress: address } = order;
+  const clearCart = useCartStore((state) => state.clearCart);
+
+  useEffect(() => {
+    if (order.isPaid) {
+      clearCart();
+    }
+  }, [order.isPaid]);
 
   return (
     <>
@@ -47,9 +57,11 @@ export const OrderInformation = ({ order }: Props) => {
           </span>
         </div>
 
-        {order?.isPaid && <PayedTag isPaid={order.isPaid ?? false} customClass="my-5" />}
-        {!order?.isPaid && (
-          <div className="my-3">
+        {order?.isPaid && (
+          <PayedTag isPaid={order.isPaid ?? false} customClass="my-5" />
+        )}
+        {!order?.isPaid && session.data?.user.role !== 'admin' && (
+          <div className="my-3 relative z-0">
             <PayPalButtton amount={order.total} orderId={order.id} />
           </div>
         )}

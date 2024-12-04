@@ -15,7 +15,7 @@ export const PlaceOrder = () => {
   const address = useAddressStore((state) => state.address);
   const cart = useCartStore((state) => state.cartItems);
   const showToast = useToastStore((state) => state.showToast);
-  const { getSummaryInformation, clearCart } = useCartStore();
+  const { getSummaryInformation } = useCartStore();
   const { subTotal, taxes, total, productsInCart } = getSummaryInformation();
 
   useEffect(() => {
@@ -37,15 +37,13 @@ export const PlaceOrder = () => {
       showToast(orderResponse?.message,'error');
       return;
     }
-
+    
+    
     showToast(orderResponse?.message,'success');
-    await sleep(3);
-    setPlacingOrder(false);
-
-    setTimeout(() => {
-      clearCart();
-    }, 0);
+    
     // redirection
+    await sleep(1);
+    setPlacingOrder(false);
     router.replace("/orders/" + orderResponse?.order?.id);
   };
 

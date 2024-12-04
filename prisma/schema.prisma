@@ -60,7 +60,7 @@ model Product {
   description String?
   gender      Gender
   inStock     Int
-  images      ProductImage[]
+  ProductImage ProductImage[]
   price       Float          @default(0)
   tags        String[]       @default([])
   title       String

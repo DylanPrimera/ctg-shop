@@ -1,3 +1,4 @@
+
 export {
   authenticate,
   Logout,
@@ -15,8 +16,19 @@ export {
   getProducts,
   getProductBySlug,
   getStockBySlug,
+  createOrUpdateProduct,
+  deleteProductImage
 } from "./products/products.actions";
 
-export { getOrders, placeOrder, getOrderById, setTransactionId } from "./order/order.actions";
+export {
+  getOrders,
+  placeOrder,
+  getOrderById,
+  setTransactionId,
+} from "./order/order.actions";
 
-export {checkPaypalPayment} from './paypal/paypal.actions';
+export { checkPaypalPayment } from "./paypal/paypal.actions";
+
+export { getUsers, changeUserRole } from "./user/user.actions";
+
+export { getCategories } from './category/category.actions';
