@@ -36,7 +36,7 @@ export interface OrderItem {
 interface Product {
   title: string;
   slug: string;
-  images: Image[];
+  ProductImage: Image[];
 }
 
 interface Image {

@@ -14,7 +14,7 @@ export const OrderProducts = ({ products }: Props) => {
           className="flex items-center mb-5"
         >
           <ProductImage
-            src={item.product.images[0].url}
+            src={item.product.ProductImage[0].url}
             alt={item.product.title}
             className="mr-5 rounded"
             width={100}
