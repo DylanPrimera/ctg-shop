@@ -185,7 +185,7 @@ export const createOrUpdateProduct = async (formData: FormData) => {
           })),
         });
       }
-      
+
       return {
         ok: true,
         productDB,
@@ -232,5 +232,45 @@ const uploadImages = async (images: File[]) => {
   } catch (error) {
     console.log(error);
     return null;
+  }
+};
+
+export const deleteProductImage = async (imageId: number, imageUrl: string) => {
+  if (!imageUrl.startsWith("http")) {
+    return {
+      ok: false,
+      message: "Image URL is not valid",
+    };
+  }
+  const imageName = imageUrl.split("/").pop()?.split(".")[0] ?? "";
+
+  try {
+    await cloudinary.uploader.destroy(imageName);
+    const deletedImage = await prisma.productImage.delete({
+      where: {
+        id: imageId,
+      },
+      select: {
+        product: {
+          select: {
+            slug: true,
+          },
+        },
+      },
+    });
+    //revalidate paths
+    revalidatePath("/admin/products");
+    revalidatePath("/admin/product/" + deletedImage.product.slug);
+    revalidatePath("/products/" + deletedImage.product.slug);
+    return {
+      ok: true,
+      message: "Image deleted successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      ok: false,
+      message: "Error deleting image",
+    };
   }
 };

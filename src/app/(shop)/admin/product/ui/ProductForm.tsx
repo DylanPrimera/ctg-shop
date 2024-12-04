@@ -1,11 +1,12 @@
 "use client";
 
-import { createOrUpdateProduct } from "@/actions";
+import { createOrUpdateProduct, deleteProductImage } from "@/actions";
 import { ProductImage as ImageCustom } from "@/components";
 import { Product, ProductImage, ValidSize } from "@/interfaces";
 import { useToastStore } from "@/store";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface Props {
@@ -30,7 +31,7 @@ interface FormInputs {
 }
 
 export const ProductForm = ({ product, categories }: Props) => {
-  const { handleSubmit, register, formState, getValues, setValue, watch,  } =
+  const { handleSubmit, register, getValues, setValue, watch } =
     useForm<FormInputs>({
       defaultValues: {
         ...product,
@@ -40,16 +41,16 @@ export const ProductForm = ({ product, categories }: Props) => {
       },
     });
   const router = useRouter();
-  const showToast = useToastStore(state=> state.showToast);
-
+  const showToast = useToastStore((state) => state.showToast);
+  const [loading, setLoading] = useState(false);
   watch("sizes"); // tells the form to re render by a field
   const onSubmit = async (data: FormInputs) => {
     const formData = new FormData();
     const { images, ...productToSave } = data;
-    if(product.id) {
+    if (product.id) {
       formData.append("id", product.id ?? "");
     }
-    
+
     formData.append("title", productToSave.title);
     formData.append("slug", productToSave.slug);
     formData.append("description", productToSave.description ?? "");
@@ -59,18 +60,19 @@ export const ProductForm = ({ product, categories }: Props) => {
     formData.append("tags", productToSave.tags);
     formData.append("gender", productToSave.gender);
     formData.append("categoryId", productToSave.categoryId);
-    if(images) {
+    if (images) {
       for (let i = 0; i < images.length; i++) {
         formData.append("images", images[i]);
       }
     }
-    const {ok, message, productDB } = await createOrUpdateProduct(formData);
-    if(!ok) {
-      showToast(message, 'error');
+    const { ok, message, productDB } = await createOrUpdateProduct(formData);
+    if (!ok) {
+      showToast(message, "error");
       return;
     }
-    showToast(message, 'success');
-    router.replace(`/admin/product/${productDB?.slug}`)
+    showToast(message, "success");
+    setValue('images', undefined);
+    router.replace(`/admin/product/${productDB?.slug}`);
   };
 
   const onSizeChanged = (size: string) => {
@@ -85,8 +87,16 @@ export const ProductForm = ({ product, categories }: Props) => {
       setValue("sizes", [...sizes, size]);
     }
   };
-  const handleDeleteProductImage = (id: number) => {
-    console.log(id);
+  const handleDeleteProductImage = async (id: number, url: string) => {
+    setLoading(true);
+    const { ok, message } = await deleteProductImage(id, url);
+    if (!ok) {
+      showToast(message, "error");
+      setLoading(false);
+      return;
+    }
+    showToast(message, "success");
+    setLoading(false);
   };
   return (
     <form
@@ -212,7 +222,7 @@ export const ProductForm = ({ product, categories }: Props) => {
             <span>Images</span>
             <input
               type="file"
-              {...register("images", {required: true})}
+              {...register("images", { required: true })}
               multiple
               className="p-2 border rounded-md bg-gray-200 outline-none"
               accept="image/png, image/jpeg, image/avif"
@@ -226,12 +236,16 @@ export const ProductForm = ({ product, categories }: Props) => {
                   alt={product.title!}
                   width={300}
                   height={300}
-                  className="rounded-t-xl shadow-md"
+                  className="rounded-t-xl shadow-md w-full"
                 />
                 <button
                   type="button"
-                  onClick={() => handleDeleteProductImage(image.id)}
-                  className="btn-danger w-full rounded-b-xl"
+                  onClick={() => handleDeleteProductImage(image.id, image.url)}
+                  className={clsx("w-full rounded-b-xl", {
+                    "btn-disabled opacity-50 pointer-events-none": loading,
+                    "btn-danger":!loading
+                  })}
+                  aria-disabled={loading}
                 >
                   Delete
                 </button>
