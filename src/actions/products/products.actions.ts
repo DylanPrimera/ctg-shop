@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { Gender, Product, Size } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { v2 as cloudinary } from "cloudinary";
+cloudinary.config(process.env.CLOUDINARY_URL ?? "");
 
 interface Filters {
   page?: number;
@@ -170,10 +172,20 @@ export const createOrUpdateProduct = async (formData: FormData) => {
         });
       }
 
-      // images
+      // Porduct images
       if (formData.getAll("images")) {
-        console.log("images", formData.getAll("images"));
+        const images = await uploadImages(formData.getAll("images") as File[]);
+        if (!images) {
+          throw new Error("Error uploading images");
+        }
+        await prisma.productImage.createMany({
+          data: images.map((image) => ({
+            url: image,
+            productId: productDB.id,
+          })),
+        });
       }
+      
       return {
         ok: true,
         productDB,
@@ -197,5 +209,28 @@ export const createOrUpdateProduct = async (formData: FormData) => {
       ok: false,
       message: "Error creating or updating product",
     };
+  }
+};
+
+const uploadImages = async (images: File[]) => {
+  try {
+    const uploadPromises = images.map(async (image) => {
+      try {
+        const buffer = await image.arrayBuffer();
+        const base64Image = Buffer.from(buffer).toString("base64");
+        return cloudinary.uploader
+          .upload(`data:image/png;base64,${base64Image}`)
+          .then((r) => r.secure_url);
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    });
+
+    const uploadedImages = await Promise.all(uploadPromises);
+    return uploadedImages.filter((image) => image !== null);
+  } catch (error) {
+    console.log(error);
+    return null;
   }
 };

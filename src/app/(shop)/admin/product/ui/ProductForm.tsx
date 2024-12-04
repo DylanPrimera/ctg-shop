@@ -226,7 +226,7 @@ export const ProductForm = ({ product, categories }: Props) => {
                   alt={product.title!}
                   width={300}
                   height={300}
-                  className="rounded-t shadow-md"
+                  className="rounded-t-xl shadow-md"
                 />
                 <button
                   type="button"
