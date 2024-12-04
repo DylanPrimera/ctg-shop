@@ -28,15 +28,15 @@ export const OrderInformation = ({ order }: Props) => {
         <h2 className="text-2xl mb-2 font-bold">Delivery address</h2>
         <div className="mb-10">
           <p className="text-xl">
-            {address.firstName} {address.lastName}
+            {address?.firstName} {address?.lastName}
           </p>
-          <p>{address.address1}</p>
-          <p>{address.address2}</p>
+          <p>{address?.address1}</p>
+          <p>{address?.address2}</p>
           <p>
-            {address.city}, {address.countryId}
+            {address?.city}, {address?.countryId}
           </p>
-          <p>{address.zipCode}</p>
-          <p>{address.phone}</p>
+          <p>{address?.zipCode}</p>
+          <p>{address?.phone}</p>
         </div>
         <hr className="w-full h-0.5 rounded bg-gray-200 mb-10" />
         <h2 className="text-2xl mb-2 font-bold">Order summary</h2>
