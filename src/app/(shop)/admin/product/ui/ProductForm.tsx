@@ -4,7 +4,6 @@ import { createOrUpdateProduct } from "@/actions";
 import { ProductImage as ImageCustom } from "@/components";
 import { Product, ProductImage, ValidSize } from "@/interfaces";
 import { useToastStore } from "@/store";
-import { sleep } from "@/utils";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -27,7 +26,7 @@ interface FormInputs {
   tags: string;
   gender: "men" | "women" | "kid" | "unisex";
   categoryId: string;
-  images: string[];
+  images?: FileList;
 }
 
 export const ProductForm = ({ product, categories }: Props) => {
@@ -37,6 +36,7 @@ export const ProductForm = ({ product, categories }: Props) => {
         ...product,
         tags: product.tags?.join(", "),
         sizes: product.sizes ?? [],
+        images: undefined,
       },
     });
   const router = useRouter();
@@ -45,7 +45,7 @@ export const ProductForm = ({ product, categories }: Props) => {
   watch("sizes"); // tells the form to re render by a field
   const onSubmit = async (data: FormInputs) => {
     const formData = new FormData();
-    const { ...productToSave } = data;
+    const { images, ...productToSave } = data;
     if(product.id) {
       formData.append("id", product.id ?? "");
     }
@@ -59,6 +59,11 @@ export const ProductForm = ({ product, categories }: Props) => {
     formData.append("tags", productToSave.tags);
     formData.append("gender", productToSave.gender);
     formData.append("categoryId", productToSave.categoryId);
+    if(images) {
+      for (let i = 0; i < images.length; i++) {
+        formData.append("images", images[i]);
+      }
+    }
     const {ok, message, productDB } = await createOrUpdateProduct(formData);
     if(!ok) {
       showToast(message, 'error');
@@ -207,9 +212,10 @@ export const ProductForm = ({ product, categories }: Props) => {
             <span>Images</span>
             <input
               type="file"
+              {...register("images", {required: true})}
               multiple
               className="p-2 border rounded-md bg-gray-200 outline-none"
-              accept="image/png, image/jpeg"
+              accept="image/png, image/jpeg, image/avif"
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

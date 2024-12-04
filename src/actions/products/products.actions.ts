@@ -170,6 +170,10 @@ export const createOrUpdateProduct = async (formData: FormData) => {
         });
       }
 
+      // images
+      if (formData.getAll("images")) {
+        console.log("images", formData.getAll("images"));
+      }
       return {
         ok: true,
         productDB,
@@ -181,8 +185,7 @@ export const createOrUpdateProduct = async (formData: FormData) => {
     revalidatePath("/admin/products");
     revalidatePath("/admin/product/" + prismaTx.productDB.slug);
     revalidatePath("/products/" + prismaTx.productDB.slug);
-    
-    
+
     return {
       ok: prismaTx.ok,
       productDB: prismaTx.productDB,
