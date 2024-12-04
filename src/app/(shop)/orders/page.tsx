@@ -25,8 +25,8 @@ export default async function OrdersPage({ searchParams }: Props) {
   return (
     <>
       <Title title="My orders" />
-      <OrdersList orders={orders}/>
-      <Pagination totalPages={totalPages as number} />
+      <OrdersList orders={orders} />
+      {orders?.length !== 0 && <Pagination totalPages={totalPages as number} />}
     </>
   );
 }

@@ -2,21 +2,18 @@
 import { placeOrder } from "@/actions";
 import { Skeleton } from "@/components";
 import { useAddressStore, useCartStore, useToastStore } from "@/store";
-import { currencyFormatter, sleep } from "@/utils";
+import { currencyFormatter } from "@/utils";
 import clsx from "clsx";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const PlaceOrder = () => {
   const [loaded, setLoaded] = useState(false);
   const [isPlacingOrder, setPlacingOrder] = useState(false);
-  const router = useRouter();
 
   const address = useAddressStore((state) => state.address);
-  const cart = useCartStore((state) => state.cartItems);
-  const showToast = useToastStore((state) => state.showToast);
-  const { getSummaryInformation } = useCartStore();
+  const { cartItems: cart, clearCart, getSummaryInformation } = useCartStore();
   const { subTotal, taxes, total, productsInCart } = getSummaryInformation();
+  const showToast = useToastStore((state) => state.showToast);
 
   useEffect(() => {
     setLoaded(true);
@@ -34,17 +31,13 @@ export const PlaceOrder = () => {
     const orderResponse = await placeOrder(productsToOrder, address);
     if (!orderResponse?.ok) {
       setPlacingOrder(false);
-      showToast(orderResponse?.message,'error');
+      showToast(orderResponse?.message, "error");
       return;
     }
-    
-    
-    showToast(orderResponse?.message,'success');
-    
-    // redirection
-    await sleep(1);
-    setPlacingOrder(false);
-    router.replace("/orders/" + orderResponse?.order?.id);
+
+    showToast(orderResponse?.message, "success");
+    clearCart();
+    window.location.replace("/orders/" + orderResponse?.order?.id);
   };
 
   if (!loaded) {

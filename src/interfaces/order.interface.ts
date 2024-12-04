@@ -5,11 +5,11 @@ export interface Order {
   total: number;
   itemsInOrder: number;
   isPaid: boolean;
-  paidAt: null;
+  paidAt: Date| null;
   createdAt: Date;
   updatedAt: Date;
   userId: string;
-  OrderAddress: OrderAddress;
+  OrderAddress: OrderAddress | null;
   orderItem: OrderItem[];
 }
 
@@ -18,7 +18,7 @@ export interface OrderAddress {
   firstName: string;
   lastName: string;
   address1: string;
-  address2: string;
+  address2: string | null;
   zipCode: string;
   city: string;
   phone: string;
@@ -30,10 +30,10 @@ export interface OrderItem {
   price: number;
   quantity: number;
   size: string;
-  product: Product;
+  product: OrderProduct;
 }
 
-interface Product {
+interface OrderProduct {
   title: string;
   slug: string;
   ProductImage: Image[];

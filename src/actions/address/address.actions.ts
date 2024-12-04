@@ -3,7 +3,6 @@
 import { Address } from "@/interfaces";
 import prisma from "@/lib/prisma";
 
-
 export const getUserAddress = async (userId: string) => {
   try {
     const userAddress = await prisma.userAddress.findUnique({
@@ -18,7 +17,7 @@ export const getUserAddress = async (userId: string) => {
       firstName: userAddress.firstName,
       lastName: userAddress.lastName,
       address1: userAddress.address1,
-      address2: userAddress.address2 || '',
+      address2: userAddress.address2 || "",
       zipCode: userAddress.zipCode,
       city: userAddress.city,
       country: userAddress.countryId,
@@ -26,8 +25,8 @@ export const getUserAddress = async (userId: string) => {
       remember: true,
     };
   } catch (error) {
-    console.error(error)
-    throw 'Failed to get user address';
+    console.error(error);
+    throw "Failed to get user address";
   }
 };
 
@@ -39,8 +38,11 @@ export const setUserAddress = async (address: Address, userId: string) => {
       address: userAddress,
     };
   } catch (error) {
-    console.error(error)
-    throw 'Failed to set user address';
+    console.error(error);
+    return {
+      ok: false,
+      message: "Failed to set user address",
+    }
   }
 };
 
@@ -51,19 +53,34 @@ const createOrReplaceAddress = async (address: Address, userId: string) => {
     }
 
     const addressToSave = {
-      userId: userId.trim(),
-      address1: address.address1?.trim() ?? '',
-      address2: address.address2?.trim() ?? '',
-      city: address.city?.trim() ?? '',
-      firstName: address.firstName?.trim() ?? '',
-      lastName: address.lastName?.trim() ?? '',
-      phone: address.phone ? String(address.phone).trim() : '',
-      zipCode: address.zipCode?.trim() ?? '',
-      countryId: address.country?.trim() ?? '',
+      firstName: address.firstName ?? null,
+      lastName: address.lastName ?? null,
+      address1: address.address1 ?? null,
+      address2: address.address2 ?? null,
+      city: address.city ?? null,
+      zipCode: address.zipCode ?? null,
+      phone: address.phone?.toString() ?? null,
+      countryId: address.country,
+      userId: userId,
     };
 
-    if (!addressToSave.address1 || !addressToSave.city || !addressToSave.firstName) {
+    console.log({ addressToSave });
+
+    if (
+      !addressToSave.address1 ||
+      !addressToSave.city ||
+      !addressToSave.firstName
+    ) {
       throw new Error("Required address fields are missing.");
+    }
+    const countryExists = await prisma.country.findUnique({
+      where: {
+        id: address.country,
+      },
+    });
+
+    if (!countryExists) {
+      throw new Error("Invalid country ID provided.");
     }
 
     const addressDb = await prisma.userAddress.findUnique({
@@ -89,10 +106,12 @@ const createOrReplaceAddress = async (address: Address, userId: string) => {
     return updatedAddress;
   } catch (error) {
     console.error("Error in createOrReplaceAddress:", error);
-    throw 'Failed to create or replace user address';
+    return {
+      ok: false,
+      message: "Failed to Create or replace address",
+    }
   }
 };
-
 
 export const deleteUserAddress = async (userId: string) => {
   try {
@@ -110,7 +129,7 @@ export const deleteUserAddress = async (userId: string) => {
       },
     });
   } catch (error) {
-    console.error(error)
-    throw 'Failed to delete user address';
+    console.error(error);
+    throw "Failed to delete user address";
   }
 };

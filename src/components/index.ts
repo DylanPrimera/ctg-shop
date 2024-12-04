@@ -7,6 +7,7 @@ export * from './product/stock-label/StockLabel'
 export * from './providers/Providers'
 export * from './providers/Providers';
 export * from './ui/footer/Footer'
+export * from './ui/no-data/NoData';
 export * from './ui/sidebar/SideBar';
 export * from './ui/skeleton/Skeleton'
 export * from "./product/quantity-selector/QuantitySelector";

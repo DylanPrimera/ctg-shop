@@ -77,7 +77,7 @@ export const useCartStore = create<State>()(
         );
         set({ cartItems: updatedProducts });
       },
-      clearCart() {
+      clearCart: () => {
         set({ cartItems: [] });
       },
     }),

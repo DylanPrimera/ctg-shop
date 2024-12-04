@@ -1,12 +1,12 @@
 import { Title } from "@/components";
-import { OrderProducts } from "./ui/OrderProducts";
+
 import { getOrderById } from "@/actions";
-import { Order } from "@/interfaces";
-import { OrderInformation } from "./ui/OrderInformation";
+
 import { notFound, redirect } from "next/navigation";
 import { Metadata } from "next";
-import { PayedTag } from "./ui/PayedTag";
+
 import { auth } from "@/auth";
+import { OrderGrid } from "./ui/OrderGrid";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -25,7 +25,7 @@ export default async function OrderPage({ params }: Props) {
   const { id } = await params;
   const session = await auth();
   const { order, products } = await getOrderById(id);
-  if(!session?.user.id) {
+  if (!session?.user.id) {
     redirect("/auth/login?redirectTo=/orders/" + id);
   }
   if (!order) {
@@ -36,16 +36,7 @@ export default async function OrderPage({ params }: Props) {
     <div className="flex justify-center items-center mb-24 sm:mb-72 px-10 sm:px-0">
       <div className="flex flex-col w-[1000px]">
         <Title title={`Order #${id.split("-").at(-1)}`} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
-          <div className="flex flex-col mt-5 order-last md:order-first">
-            <PayedTag isPaid={order.isPaid ?? false} />
-            {/* Cart Items*/}
-            <OrderProducts products={products} />
-          </div>
-
-          {/* Checkout*/}
-          <OrderInformation order={order as Order} />
-        </div>
+        <OrderGrid order={order} products={products}/>
       </div>
     </div>
   );
