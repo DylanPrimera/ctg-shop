@@ -72,9 +72,7 @@ export const getProducts = async ({
     //Pagination
     const totalPages = Math.ceil(
       (await prisma.product.count({
-        where: {
-          gender,
-        },
+        where: filters
       })) / take
     );
 
