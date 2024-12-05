@@ -1,6 +1,6 @@
 export const revalidate = 60;
 
-import { getProducts } from "@/actions/products/products.actions";
+import { getProducts } from "@/actions";
 import { Pagination, ProductsGrid, Title } from "@/components";
 
 

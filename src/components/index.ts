@@ -9,6 +9,7 @@ export * from './providers/Providers';
 export * from './ui/footer/Footer'
 export * from './ui/no-data/NoData';
 export * from './ui/sidebar/SideBar';
+export * from './ui/skeleton-cards/SkeletonCards'
 export * from './ui/skeleton/Skeleton'
 export * from "./product/quantity-selector/QuantitySelector";
 export * from "./product/size-selector/SizeSelector";

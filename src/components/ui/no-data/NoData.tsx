@@ -1,6 +1,6 @@
 interface Props {
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }
 
 export const NoData = ({ title, subtitle }: Props) => {
