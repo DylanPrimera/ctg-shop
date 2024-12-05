@@ -21,9 +21,9 @@ export const UsersList = ({ users }: Props) => {
   }
   return (
     <>
-      <div className="mb-10">
-        <table className="min-w-full">
-          <thead className="bg-gray-200 border-b">
+      <div className="mb-10 relative overflow-x-auto">
+        <table className="w-full text-left rtl:text-right">
+          <thead className="bg-gray-200 border-b uppercase">
             <tr>
               <th
                 scope="col"

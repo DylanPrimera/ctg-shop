@@ -10,7 +10,7 @@ export default function CheckoutPage() {
       <div className="flex flex-col w-[1000px]">
         <Title title="Checkout" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
-          <div className="flex flex-col mt-5 order-last md:order-first">
+          <div className="flex flex-col mt-5 order-first">
             {/* Some Info */}
             <span className="text-xl">Adjust items</span>
             <Link href={"/cart"} className="underline mb-5">

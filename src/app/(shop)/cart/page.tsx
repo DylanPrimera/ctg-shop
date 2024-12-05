@@ -9,7 +9,7 @@ export default function CartPage() {
       <div className="flex flex-col w-[1000px]">
         <Title title="Cart" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
-          <div className="flex flex-col mt-5 order-last md:order-first">
+          <div className="flex flex-col mt-5 order-first">
             {/* Some Info */}
             <span className="text-xl">Add more products</span>
             <Link href={"/"} className="underline mb-5">
