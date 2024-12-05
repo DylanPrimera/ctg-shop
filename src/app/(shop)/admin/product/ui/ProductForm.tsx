@@ -67,7 +67,7 @@ export const ProductForm = ({ product, categories }: Props) => {
     }
     const { ok, message, productDB } = await createOrUpdateProduct(formData);
     if (!ok) {
-      showToast(message, "error");
+      showToast(message, 'error');
       return;
     }
     showToast(message, "success");
