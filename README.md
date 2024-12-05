@@ -1,7 +1,3 @@
-# Description
-
-
-
 ## Run on dev
 
 1. Clone repository
