@@ -8,9 +8,9 @@ export default function ShopLayout({
   return (
     <>
       <SideBar />
-      <main className="grid min-h-dvh grid-rows-[auto,1fr,auto]">
+      <main className="flex flex-col min-h-screen">
         <TopMenu />
-        <div className="px-3 sm:px-10">{children}</div>
+        <div className="flex-grow px-3 sm:px-10 lg:w-[1400px] lg:mx-auto lg:my-0">{children}</div>
         <Footer />
       </main>
     </>

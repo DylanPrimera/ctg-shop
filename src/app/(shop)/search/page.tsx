@@ -1,6 +1,5 @@
 import { getProducts } from "@/actions";
-import { Pagination, ProductsGrid, Title } from "@/components";
-import { notFound } from "next/navigation";
+import { SearchGrid } from "./ui/SearchGrid";
 
 interface Props {
   searchParams: Promise<{ q?: string; page?: string }>;
@@ -14,22 +13,6 @@ export default async function SearchPage({ searchParams }: Props) {
     search: q,
   });
 
-  if (products.length === 0) {
-    notFound();
-  }
-  console.log(products, totalPages);
 
-  return (
-    <>
-      <div className="flex items-center justify-center w-50 mx-auto">
-        <input type="Search" placeholder="Search" />
-      </div>
-
-      {products && q !== undefined && (
-        <Title title={`You search: ${q !== undefined ? q : ""}`} subtitle="" />
-      )}
-      {products && q !== undefined && <ProductsGrid products={products} />}
-      {totalPages > 1 && products && q !== undefined && <Pagination totalPages={totalPages} />}
-    </>
-  );
+  return <SearchGrid products={products} totalPages={totalPages} q={q} />;
 }

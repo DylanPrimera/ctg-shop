@@ -13,7 +13,7 @@ interface Props {
 export const ProductsGrid = ({ products }: Props) => {
   const [loading, setLoading] = useState(true);
   const handleLoading = async () => {
-    await sleep(1);
+    await sleep(0.3);
     setLoading(false);
   };
   useEffect(() => {

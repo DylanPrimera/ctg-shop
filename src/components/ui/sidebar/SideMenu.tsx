@@ -16,11 +16,17 @@ import { SidebarMenuItem } from "./SidebarMenuItem";
 import { useUIStore } from "@/store";
 import clsx from "clsx";
 import { Logout } from "@/actions";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 interface Props {
   isAuthenticated: boolean;
   isAdmin: boolean;
 }
+
+interface FormInputs {
+  search: string;
+} 
 
 const NAV_ITEMS = [
   {
@@ -40,7 +46,7 @@ const NAV_ITEMS = [
   },
   {
     title: "Kid",
-    icon: <IoHappyOutline size={20}/>,
+    icon: <IoHappyOutline size={20} />,
     href: "/gender/kid",
   },
 ];
@@ -82,13 +88,21 @@ const ADMIN_OPTIONS = [
 ];
 
 export const SideMenu = ({ isAuthenticated = false, isAdmin }: Props) => {
+  const {register, handleSubmit, setValue} = useForm<FormInputs>();
   const isMenuOpen = useUIStore((state) => state.isMenuOpen);
   const closeSideMenu = useUIStore((state) => state.closeSideMenu);
-
+  const router = useRouter();
   const handleClick = (clicked: boolean) => {
     if (clicked) {
       closeSideMenu();
     }
+  };
+
+  const handleSearch = (data: FormInputs) => {
+    const {search} = data;
+    closeSideMenu();
+    setValue('search', '');
+    router.push(`/search?q=${search}`);
   };
 
   const handleSignOut = async (clicked: boolean) => {
@@ -124,14 +138,15 @@ export const SideMenu = ({ isAuthenticated = false, isAdmin }: Props) => {
             onClick={closeSideMenu}
           />
 
-          <div className="relative mt-14">
+          <form className="relative mt-14" onSubmit={handleSubmit(handleSearch)}>
             <IoSearchOutline size={20} className="absolute top-2 left-2" />
             <input
               type="text"
-              placeholder="Search (currently not work)"
+              placeholder="Search products"
               className="w-full bg-gray-50 pl-10 py-1 pr-10 rounded border-b-2  border-gray-200 focus:outline-none focus:border-blue-500"
+              {...register('search')}
             />
-          </div>
+          </form>
           <div className="block sm:hidden">
             {NAV_ITEMS.map((option) => (
               <SidebarMenuItem
