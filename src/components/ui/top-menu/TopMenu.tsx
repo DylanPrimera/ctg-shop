@@ -2,7 +2,7 @@
 import { titleFont } from "@/config/fonts";
 import Link from "next/link";
 import { NavItem } from "./NavItem";
-import { IoCartOutline, IoMenuOutline } from "react-icons/io5";
+import { IoCartOutline, IoMenuOutline, IoSearchOutline } from "react-icons/io5";
 import { useCartStore, useUIStore } from "@/store";
 import { useEffect, useState } from "react";
 
@@ -50,9 +50,9 @@ export const TopMenu = () => {
         ))}
       </div>
       <div className="flex items-center gap-2">
-        {/* <Link href={"/search"}>
+        <Link href={"/search"}>
           <IoSearchOutline className="w-5 h-5" />
-        </Link> */}
+        </Link>
         <Link href={"/cart"}>
           <div className="relative py-2">
             {totalItemsInCart > 0 && loaded && (
