@@ -1,7 +1,7 @@
 "use client";
 import { QuantitySelector, SizeSelector } from "@/components";
 import { CartProduct, Product, ValidSize } from "@/interfaces";
-import { useCartStore } from "@/store";
+import { useCartStore, useToastStore } from "@/store";
 import clsx from "clsx";
 import React, { useState } from "react";
 
@@ -11,6 +11,7 @@ interface Props {
 
 export const AddToCart = ({ product }: Props) => {
   const addProductToCart = useCartStore((state) => state.addProductToCart);
+  const showTast = useToastStore(state => state.showToast);
 
   const [size, setSize] = useState<ValidSize>();
   const [quantity, setQuantity] = useState(1);
@@ -47,6 +48,7 @@ export const AddToCart = ({ product }: Props) => {
     setSizeError(false);
     setQuantity(1);
     setSize(undefined);
+    showTast('Added to cart!','success');
   };
 
   return (
