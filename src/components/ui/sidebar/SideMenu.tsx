@@ -1,12 +1,16 @@
 "use client";
 import {
   IoCloseOutline,
+  IoHappyOutline,
+  IoHomeOutline,
   IoLogInOutline,
   IoLogOutOutline,
+  IoManOutline,
   IoPeopleOutline,
   IoSearchOutline,
   IoShirtOutline,
   IoTicketOutline,
+  IoWomanOutline,
 } from "react-icons/io5";
 import { SidebarMenuItem } from "./SidebarMenuItem";
 import { useUIStore } from "@/store";
@@ -18,6 +22,29 @@ interface Props {
   isAdmin: boolean;
 }
 
+const NAV_ITEMS = [
+  {
+    title: "All Products",
+    icon: <IoHomeOutline />,
+    href: "/",
+  },
+  {
+    title: "Men",
+    icon: <IoManOutline size={20} />,
+    href: "/gender/men",
+  },
+  {
+    title: "Women",
+    icon: <IoWomanOutline size={20} />,
+    href: "/gender/women",
+  },
+  {
+    title: "Kid",
+    icon: <IoHappyOutline size={20}/>,
+    href: "/gender/kid",
+  },
+];
+
 const USER_OPTIONS = [
   // {
   //   title: "Profile",
@@ -25,7 +52,7 @@ const USER_OPTIONS = [
   //   href: "/profile",
   // },
   {
-    title: "Orders",
+    title: "My Orders",
     icon: <IoTicketOutline size={20} />,
     href: "/orders",
   },
@@ -89,7 +116,8 @@ export const SideMenu = ({ isAuthenticated = false, isAdmin }: Props) => {
             {
               "translate-x-full": !isMenuOpen,
             }
-          )}>
+          )}
+        >
           <IoCloseOutline
             size={45}
             className="absolute top-5 right-5 cursor-pointer"
@@ -103,6 +131,16 @@ export const SideMenu = ({ isAuthenticated = false, isAdmin }: Props) => {
               placeholder="Search (currently not work)"
               className="w-full bg-gray-50 pl-10 py-1 pr-10 rounded border-b-2  border-gray-200 focus:outline-none focus:border-blue-500"
             />
+          </div>
+          <div className="block sm:hidden">
+            {NAV_ITEMS.map((option) => (
+              <SidebarMenuItem
+                key={option.title}
+                {...option}
+                onChangeClick={(clicked) => handleClick(clicked)}
+              />
+            ))}
+            <hr className="w-full h-px bg-gray-200 mt-5 mb-6" />
           </div>
           {isAuthenticated &&
             !isAdmin &&
