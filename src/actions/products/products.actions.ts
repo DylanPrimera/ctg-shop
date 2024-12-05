@@ -11,6 +11,7 @@ interface Filters {
   page?: number;
   take?: number;
   gender?: Gender;
+  search?: string;
 }
 
 const productSchema = z.object({
@@ -32,9 +33,26 @@ const productSchema = z.object({
   categoryId: z.string().uuid(),
 });
 
-export const getProducts = async ({ page = 1, take = 12, gender }: Filters) => {
+export const getProducts = async ({
+  page = 1,
+  take = 12,
+  gender,
+  search,
+}: Filters) => {
   if (isNaN(Number(page)) || page < 1) page = 1;
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const filters: any = {};
+    if (gender) {
+      filters.gender = gender;
+    }
+    if (search) {
+      filters.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } },
+        { tags: { hasSome: search.split(" ") } },
+      ];
+    }
     //Get all products
     const productsDB = await prisma.product.findMany({
       take,
@@ -48,9 +66,7 @@ export const getProducts = async ({ page = 1, take = 12, gender }: Filters) => {
           },
         },
       },
-      where: {
-        gender,
-      },
+      where: filters,
     });
 
     //Pagination

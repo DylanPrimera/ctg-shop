@@ -13,8 +13,7 @@ export const Pagination = ({ totalPages }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const currentPage =
-    Number(searchParams.get("page") ? searchParams.get("page") : 1) ?? 1;
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const numberOfPages = generatePaginationNumbers(currentPage, totalPages);
 
