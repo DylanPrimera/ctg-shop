@@ -10,7 +10,7 @@ export default function ShopLayout({
       <SideBar />
       <main className="flex flex-col min-h-screen">
         <TopMenu />
-        <div className="flex-grow px-3 sm:px-10 lg:w-[1400px] lg:mx-auto lg:my-0">{children}</div>
+        <div className="flex-grow px-3 sm:px-10 xl:w-[1400px] xl:mx-auto xl:my-0">{children}</div>
         <Footer />
       </main>
     </>
