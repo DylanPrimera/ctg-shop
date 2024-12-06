@@ -34,7 +34,7 @@ export const TopMenu = () => {
 
   return (
     <nav className="px-5 w-full">
-      <div className="flex justify-between items-center xl:w-[1350px] xl:mx-auto">
+      <div className="flex justify-between items-center 2xl:w-[1350px] 2xl:mx-auto">
         <div>
           <Link href={"/"}>
             <span
