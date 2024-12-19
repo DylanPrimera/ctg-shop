@@ -191,7 +191,7 @@ export const SideMenu = ({ isAuthenticated = false, isAdmin }: Props) => {
             <SidebarMenuItem
               title="Login"
               icon={<IoLogInOutline size={20} />}
-              href="/auth"
+              href="/auth/login"
               onChangeClick={(clicked) => handleClick(clicked)}
             />
           )}
