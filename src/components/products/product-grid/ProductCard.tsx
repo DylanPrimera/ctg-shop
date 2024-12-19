@@ -10,7 +10,11 @@ interface Props {
 
 export const ProductCard = ({ product }: Props) => {
   const [displayImage, setdisplayImage] = useState(product.images[0]);
-
+  const customSrc = (displayImage)
+  ? displayImage.startsWith("http")
+    ? displayImage
+    : `/products/${displayImage}`
+  : "/imgs/placeholder.jpg";
   const handleMouseEvent = (isEnter: boolean) => {
     if (isEnter) {
       setdisplayImage(product.images[1]);
@@ -23,7 +27,7 @@ export const ProductCard = ({ product }: Props) => {
     <div className="rounded-md overflow-hidden fade-in">
       <Link href={`/product/${product.slug}`}>
         <Image
-          src={`/products/${displayImage}`}
+          src={customSrc}
           alt={product.title}
           className="w-full object-cover rounded transform transition-all duration-300 ease-in-out hover:scale-105"
           width={500}

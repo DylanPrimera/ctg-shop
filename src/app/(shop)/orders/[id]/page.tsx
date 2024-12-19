@@ -25,7 +25,7 @@ export default async function OrderPage({ params }: Props) {
   const { id } = await params;
   const session = await auth();
   const { order, products } = await getOrderById(id);
-  if (!session?.user.id) {
+  if (!session) {
     redirect("/auth/login?redirectTo=/orders/" + id);
   }
   if (!order) {

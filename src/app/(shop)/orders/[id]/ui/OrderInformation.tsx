@@ -15,7 +15,6 @@ export const OrderInformation = ({ order }: Props) => {
   const session = useSession();
   const { OrderAddress: address } = order;
   const clearCart = useCartStore((state) => state.clearCart);
-
   useEffect(() => {
     if (order.isPaid) {
       clearCart();
@@ -60,7 +59,7 @@ export const OrderInformation = ({ order }: Props) => {
         {order?.isPaid && (
           <PayedTag isPaid={order.isPaid ?? false} customClass="my-5" />
         )}
-        {!order?.isPaid && session.data?.user.role !== 'admin' && (
+        {!order?.isPaid && session?.data?.user?.role !== 'admin' && (
           <div className="my-3 relative z-0">
             <PayPalButtton amount={order.total} orderId={order.id} />
           </div>
